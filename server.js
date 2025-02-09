@@ -42,24 +42,6 @@ app.get('/users', async (req, res) => {
   }
 });
 
-app.post('/webhook', (req, res) => {
-  console.log('Webhook recebido. Iniciando deploy...');
-  res.status(200).send('Webhook recebido, iniciando deploy...');
-  const scriptPath = '/root/scripts/deploy.sh';
-  exec(scriptPath, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Erro ao executar o script: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-      return;
-    }
-
-    console.log(`stdout: ${stdout}`);
-  });
-});
-
 app.get("/ping",(req, res) => {
   return res.status(200).send('Pong');
 });
