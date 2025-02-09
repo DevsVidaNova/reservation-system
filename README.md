@@ -1,5 +1,7 @@
 # Gerenciamento de Reservas de Salas
 
+
+
 ## 📌 Descrição
 Este é um sistema de gerenciamento de reservas de salas, desenvolvido com **Express.js** para o backend. O objetivo é permitir o agendamento e administração eficiente de salas para diferentes finalidades.
 
