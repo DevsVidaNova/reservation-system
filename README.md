@@ -18,10 +18,6 @@ Este é um sistema de gerenciamento de reservas de salas, desenvolvido com **Exp
 ├── config/         # Configurações gerais (ex: conexão com BD)
 ├── server.js       # Inicialização do servidor
 ```
-
-
-
-
 ## 📌 Instalação e Execução
 1. Clone o repositório:
    ```bash
