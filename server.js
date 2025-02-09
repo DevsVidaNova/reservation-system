@@ -42,6 +42,28 @@ app.get('/users', async (req, res) => {
   }
 });
 
+app.post('/webhook', (req, res) => {
+  console.log('Webhook recebido. Iniciando deploy...');
+  const scriptPath = '/root/scripts/deploy.sh';
+  exec(scriptPath, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Erro ao executar o script: ${error.message}`);
+      return res.status(500).send('Erro ao executar o deploy.');
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return res.status(500).send('Erro ao executar o deploy.');
+    }
+
+    console.log(`stdout: ${stdout}`);
+    return res.status(200).send('Deploy realizado com sucesso!');
+  });
+});
+
+app.get("/ping",(req, res) => {
+  return res.status(200).send('Pong');
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
