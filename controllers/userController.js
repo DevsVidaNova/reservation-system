@@ -46,5 +46,13 @@ const showUser = async (req, res) => {
     res.status(500).json({ message: "Erro ao buscar dados do usuario." });
   }
 };
-
-module.exports = { showUser };
+const listUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, { password: 0 });
+    res.status(200).json(users);
+  } catch (err) {
+    console.error('Erro ao buscar usuários:', err);
+    res.status(500).json({ message: 'Erro ao buscar usuários' });
+  }
+};
+module.exports = { showUser, listUsers };

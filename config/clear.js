@@ -5,7 +5,6 @@ const dbName = 'Reserva-CBVN';
 const collectionName = 'bookings';  
 async function clearCollection() {
   let client;
-
   try {
     client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
