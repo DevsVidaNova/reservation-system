@@ -11,7 +11,7 @@ exports.createTimeline = async (req, res) => {
 };
 
 // Obtém todas as timeline
-exports.gettimeline = async (req, res) => {
+exports.getTimeline = async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('timeline')

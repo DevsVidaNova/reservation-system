@@ -28,7 +28,7 @@
         "**/app/layout.tsx": false,
         "**/app/page.js": true,
         "**/lib": true,
-        "**/.env": true,
+        "**/.env": false,
         "**/eslint.config.mjs": true,
     }
 }   

@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const bodyParser = require('body-parser');
-const connectDB = require('./config/mongoose');
+const connectDB = require('./config/moongose');
 
 const app = express();
 const port = 8080;
