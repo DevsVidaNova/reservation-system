@@ -18,7 +18,7 @@ app.use("/api/auth", require("./routes/authRoute"));
 app.use('/rooms', require('./routes/roomRoute'))
 app.use('/users', require('./routes/userRoutes'));
 app.use('/stats', require('./routes/statsRoute'));
-app.use('/timelines', require('./routes/timelineRoute'));
+app.use('/timeline', require('./routes/timelineRoute'));
 
 
 

@@ -14,23 +14,20 @@ exports.createTimeline = async (req, res) => {
 exports.getTimeline = async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from('timeline')
-      .select('data');
-
+      .from('timelines') 
+      .select('*'); 
     if (error) {
       console.error('Erro ao buscar timeline:', error);
+      console.log(error);
       return res.status(400).json({ error: error.message });
     }
-
-    // Extrair o conteúdo da coluna 'data' de cada linha
-    const timeline = data.map((row) => row.data);
-
-    res.status(200).json(timeline);
+    res.status(200).json(data);  
   } catch (err) {
     console.error('Erro no servidor:', err);
     res.status(500).json({ error: 'Erro no servidor' });
   }
 };
+
 
 // Atualiza uma timeline pelo ID
 exports.updateTimeline = async (req, res) => {
