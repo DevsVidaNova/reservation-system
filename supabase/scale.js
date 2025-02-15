@@ -107,18 +107,30 @@ async function getScaleById(req, res) {
                 stories:stories(id, name, phone, email),
                 dynamic:dynamic(id, name, phone, email),
                 direction:direction(id, name, phone, email),
+                band:band(id, name, phone, email),
                 scale_confirmations:scale_confirmations(user_id, confirmed)
             `)
             .eq("id", id)
-            .single(); // Garantir que retorna um único item
+            .single();
 
         if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        if (!data) {
             return res.status(404).json({ error: "Escala não encontrada." });
         }
+
+        const userFields = [
+            "projection", "light", "transmission", "camera", "live",
+            "sound", "training_sound", "photography", "stories", "dynamic", "direction","band"
+        ];
+
+        // Contagem de confirmações
+        const totalUsers = userFields.filter(field => data[field] !== null).length;
+
+        // Quantidade de confirmações já registradas (scale_confirmations já retorna só os confirmados)
+        const confirmedUsers = data.scale_confirmations.filter(conf => conf.confirmed).length;
+
+        // Calcula a porcentagem de confirmações
+        const percentageConfirmed = totalUsers > 0 ? ((confirmedUsers / totalUsers) * 100).toFixed(2) : 0;
+
 
         // Formata a resposta
         const formatUser = (userField) => {
@@ -145,7 +157,9 @@ async function getScaleById(req, res) {
             photography: formatUser('photography'),
             stories: formatUser('stories'),
             dynamic: formatUser('dynamic'),
-            direction: formatUser('direction')
+            direction: formatUser('direction'),
+            band: formatUser('band'),
+            percentage_confirmed: percentageConfirmed 
         };
 
         res.status(200).json(formattedData);
@@ -305,7 +319,7 @@ async function confirmScale(req, res) {
             .from('scales')
             .select('*')
             .eq('id', scaleId)
-            .single(); 
+            .single();
 
         if (scaleError || !scaleData) {
             return res.status(404).json({ error: 'Escala não encontrada.' });
@@ -352,7 +366,7 @@ async function confirmScale(req, res) {
             .from('scale_confirmations')
             .insert([{
                 scale_id: scaleId,
-                user_id: req.user.id,
+                user_id: userId,
                 confirmed,
             }])
             .select()

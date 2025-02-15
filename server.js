@@ -21,12 +21,14 @@ app.use('/stats', require('./routes/statsRoute'));
 
 
 //SUPABASE
+
 app.use('/room', require('./supabase/room'));
 app.use('/booking', require('./supabase/booking'));
 app.use('/auth', require('./supabase/auth'));
 app.use('/analytics', require('./supabase/analytics'));
 app.use('/user', require('./supabase/user'));
 app.use('/scale', require('./supabase/scale'));
+
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta http://localhost:${port}`);
