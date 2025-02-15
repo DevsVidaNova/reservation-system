@@ -18,13 +18,14 @@ app.use("/api/auth", require("./routes/authRoute"));
 app.use('/rooms', require('./routes/roomRoute'))
 app.use('/users', require('./routes/userRoutes'));
 app.use('/stats', require('./routes/statsRoute'));
-app.use('/timeline', require('./routes/timelineRoute'));
 
 
-
-
-
-
+//SUPABASE
+app.use('/room', require('./supabase/room'));
+app.use('/booking', require('./supabase/booking'));
+app.use('/auth', require('./supabase/auth'));
+app.use('/analytics', require('./supabase/analytics'));
+app.use('/user', require('./supabase/user'));
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta http://localhost:${port}`);

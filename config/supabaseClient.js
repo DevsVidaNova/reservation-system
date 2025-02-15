@@ -16,8 +16,7 @@ async function testConnection() {
         if (error) {
             throw new Error(error.message);
         }
-        console.log('Conexão bem-sucedida!');
-        console.log('Dados recebidos:', data);
+        console.log('Conexão com Supabase bem-sucedida!');
     } catch (err) {
         console.error('Erro ao conectar com o Supabase:', err.message);
     }
