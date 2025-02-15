@@ -102,13 +102,10 @@ module.exports = {
 
 
 router.route("/").post(middleware.requireAdmin, createRoom);
-
-router.route("/:id").delete(middleware.requireAdmin, deleteRoom);
-
-router.route("/:id").get(middleware.publicRoute, getRoomById); 
-
 router.route("/").get(middleware.publicRoute, getRooms); 
 
+router.route("/:id").delete(middleware.requireAdmin, deleteRoom);
+router.route("/:id").get(middleware.publicRoute, getRoomById); 
 router.route("/:id").put(middleware.requireAdmin, updateRoom); 
 
 

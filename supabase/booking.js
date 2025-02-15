@@ -258,15 +258,11 @@ async function getBookingByFilter(req, res) {
 }
 
 router.route("/").post(middleware.requireAuth, createBooking);
-
-router.route("/:id").delete(middleware.requireAuth, middleware.requireAdmin, deleteBooking); // Precisa de autenticação e admin
-
-router.route("/:id").get(middleware.publicRoute, getBookingById); // Precisa apenas de autenticação
-
 router.route("/").get(middleware.publicRoute, getBooking); // Precisa apenas de autenticação
+router.route("/filter").post(middleware.requireAuth, getBookingByFilter); 
 
 router.route("/:id").put(middleware.requireAdmin, updateBooking); // Precisa apenas de autenticação
-
-router.route("/filter").post(middleware.requireAuth, getBookingByFilter); 
+router.route("/:id").get(middleware.publicRoute, getBookingById); // Precisa apenas de autenticação
+router.route("/:id").delete(middleware.requireAuth, middleware.requireAdmin, deleteBooking); // Precisa de autenticação e admin
 
 module.exports = router;

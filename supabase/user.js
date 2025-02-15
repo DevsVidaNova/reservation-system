@@ -140,7 +140,10 @@ const createUser = async (req, res) => {
             return res.status(400).json({ error: "Erro ao criar perfil." });
         }
 
-        res.status(201).json(data);
+        res.status(201).json({
+            message: "Usuário criado com sucesso.",
+            user: { name, email, phone, role, user_id: user.user.id },
+        });
     } catch (err) {
         console.error("Erro ao criar usuário:", err);
         res.status(500).json({ error: "Erro ao criar usuário." });

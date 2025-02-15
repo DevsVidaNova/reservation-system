@@ -17,6 +17,7 @@ const requireAuth = async (req, res, next) => {
       .eq('user_id', user.user.id)
       .single();
 
+    req.profile = profile;
     req.role = profile.role;
     req.user = user.user;
     next();
