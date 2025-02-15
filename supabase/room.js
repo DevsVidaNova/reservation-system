@@ -82,12 +82,9 @@ async function updateRoom(req, res) {
 // 📌 5. Deletar uma sala
 async function deleteRoom(req, res) {
   const { id } = req.params;
-
   try {
-    const { error } = await supabase.from("rooms").delete().eq("id", id);
-
+    const { data, error } = await supabase.from("rooms").delete().eq("id", id);
     if (error) return res.status(400).json({ error: error.message });
-
     res.json({ message: "Sala deletada com sucesso." });
   } catch (err) {
     console.error("Erro ao deletar sala:", err);

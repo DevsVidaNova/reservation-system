@@ -147,12 +147,10 @@ const createUser = async (req, res) => {
     }
 };
 
-
 router.route("/").post(middleware.requireAdmin, createUser);
 router.route("/").get(middleware.requireAdmin, listUsers);
 router.route("/:id").get(middleware.requireAdmin, showUser);
 router.route("/:id").delete(middleware.requireAdmin, deleteUser);
 router.route("/:id").put(middleware.requireAdmin, updateUser);
-
 
 module.exports = router;
