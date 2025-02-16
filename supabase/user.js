@@ -41,7 +41,6 @@ const listUsers = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     const userId = req.params.id
-    console.log(userId)
     if (!userId) {
         return res.status(400).json({ error: 'ID do usuário não encontrado.' });
     }
@@ -115,7 +114,8 @@ const updateUser = async (req, res) => {
 
 const createUser = async (req, res) => { 
     const { name, phone, role, password, email } = req.body; // Sem email aqui, pois você não quer usar o email no processo
-    if (!name || !phone || !role || !password) { 
+    console.log(req.body)
+    if (!name || !phone || !email || !password) { 
         return res.status(400).json({ error: "Dados inválidos." });
     }
     try {

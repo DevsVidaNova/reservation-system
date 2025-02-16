@@ -8,48 +8,66 @@ const router = express.Router();
 dayjs.extend(customParseFormat);
 
 async function createBooking(req, res) {
-  const userId = req.user.id;
-  const { description, room, date, startTime, endTime, repeat, dayRepeat } = req.body;
+  const userId = req.profile.id;
+  const { description, room, date, start_time, end_time, repeat, day_repeat } = req.body;
 
-  if (!repeat && !date) {
+  if (!description || !room || !start_time || !end_time) { 
+    return res.status(400).json({ error: 'Campos não foram enviados.' });
+  }
+  if (!repeat && !date)  {
     return res.status(400).json({ error: 'Data é obrigatória, a menos que a reserva seja repetida.' });
   }
+  if (start_time >= end_time || start_time === end_time || end_time <= start_time) {
+    return res.status(400).json({ error: 'Os horários são invalidos.' });
+  }
+
+  const formattedDate = dayjs(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
   try {
     let conflictQueries = [];
 
-    // 🔍 Se for uma reserva normal, verifica se há conflitos no mesmo dia
-    if (date) {
+    if (formattedDate) {
       conflictQueries.push(
         supabase.from('bookings').select('*')
           .eq('room', room)
-          .eq('date', date)
-      );
-
-      // 🔍 Também verifica se há uma reserva repetitiva no mesmo dia da semana
-      const dayOfWeek = dayjs(date).format('dddd'); // Ex: "Monday"
-      conflictQueries.push(
-        supabase.from('bookings').select('*')
-          .eq('room', room)
-          .eq('day_repeat', dayOfWeek)
-          .neq('date', null) // Para garantir que é uma reserva recorrente
+          .eq('date', formattedDate)  
+          .gte('start_time', start_time)
+          .lte('end_time', end_time)
       );
     }
 
-    // 🔍 Se for uma reserva recorrente, verifica conflitos no mesmo `day_repeat`
     if (repeat) {
-      conflictQueries.push(
-        supabase.from('bookings').select('*')
-          .eq('room', room)
-          .eq('day_repeat', dayRepeat)
-      );
+      if (repeat === 'day') {
+        conflictQueries.push(
+          supabase.from('bookings').select('*')
+            .eq('room', room)
+            .eq('repeat', 'day')
+            .eq('day_repeat', day_repeat) 
+            .gte('start_time', start_time)
+            .lte('end_time', end_time)
+        );
+      }
 
-      // 🔍 Também verifica se há uma reserva normal (`date`) que cai nesse `day_repeat`
-      conflictQueries.push(
-        supabase.from('bookings').select('*')
-          .eq('room', room)
-          .eq('date', dayjs().day(dayRepeat).format('YYYY-MM-DD'))
-      );
+      if (repeat === 'week') {
+        conflictQueries.push(
+          supabase.from('bookings').select('*')
+            .eq('room', room)
+            .eq('repeat', 'week')  
+            .eq('day_repeat', day_repeat)  
+            .gte('start_time', start_time)
+            .lte('end_time', end_time)
+        );
+      }
+      if (repeat === 'month') {
+        conflictQueries.push(
+          supabase.from('bookings').select('*')
+            .eq('room', room)
+            .eq('repeat', 'month') 
+            .eq('day_repeat', day_repeat) 
+            .gte('start_time', start_time)
+            .lte('end_time', end_time)
+        );
+      }
     }
 
     // 🔥 Executa todas as consultas de conflito
@@ -58,7 +76,7 @@ async function createBooking(req, res) {
 
     // 🚨 **Verifica sobreposição de horário**
     const hasConflict = existingBookings.some(booking => {
-      return startTime < booking.end_time && endTime > booking.start_time;
+      return (start_time < booking.end_time && end_time > booking.start_time);
     });
 
     if (hasConflict) {
@@ -68,18 +86,16 @@ async function createBooking(req, res) {
     // ✅ **Criação da reserva**
     const { data, error } = await supabase
       .from('bookings')
-      .insert([
-        {
-          description,
-          room,
-          date: repeat ? null : date,
-          start_time: startTime,
-          end_time: endTime,
-          repeat,
-          day_repeat: dayRepeat,
-          user_id: userId,
-        },
-      ])
+      .insert([{
+        description,
+        room,
+        date: repeat ? null : formattedDate,  // Para reservas repetidas, data será nula
+        start_time: start_time,
+        end_time: end_time,
+        repeat,
+        day_repeat: day_repeat,
+        user_id: userId,
+      }])
       .select()
       .single();
 
@@ -94,11 +110,22 @@ async function createBooking(req, res) {
   }
 }
 
+
 async function getBooking(req, res) {
   try {
     const { data, error } = await supabase
       .from('bookings')
-      .select('*');
+      .select(`
+        id,
+        description,
+        date,
+        start_time,
+        end_time,
+        repeat,
+        day_repeat,
+        user_profiles(id, name, email, phone),  
+        rooms(id, name, size)  
+      `);
 
     if (error) {
       return res.status(400).json({ error: error.message });
@@ -107,13 +134,22 @@ async function getBooking(req, res) {
     const formattedData = data.map(booking => ({
       id: booking.id,
       description: booking.description,
-      room: booking.room,
+      room: booking.rooms ? {
+        id: booking.rooms.id,
+        name: booking.rooms.name,
+        size: booking.rooms.size,
+      } : null,
       date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
-      start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
-      end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+      start_time: booking.start_time ? dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm') : null,
+      end_time: booking.end_time ? dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm') : null,
       repeat: booking.repeat,
       day_repeat: booking.day_repeat,
-      user_id: booking.user_id,
+      user: booking.user_profiles ? {
+        id: booking.user_profiles.id,
+        name: booking.user_profiles.name,
+        email: booking.user_profiles.email,
+        phone: booking.user_profiles.phone,
+      } : null,
     }));
 
     res.json(formattedData);
@@ -125,23 +161,55 @@ async function getBooking(req, res) {
 
 async function getBookingById(req, res) {
   const { id } = req.params;
+
   try {
     const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select(`
+        id,
+        description,
+        date,
+        start_time,
+        end_time,
+        repeat,
+        day_repeat,
+        user_profiles(id, name, email, phone),
+        rooms(id, name, size)
+      `)
       .eq('id', id)
       .single();
 
-    if (error) {
+    if (error || !data) {
       return res.status(404).json({ error: 'Reserva não encontrada' });
     }
 
-    res.json(data);
+    // Formatação dos dados
+    const formattedData = {
+      id: data.id,
+      description: data.description,
+      room: data.rooms && {
+        id: data.rooms.id,
+        name: data.rooms.name,
+        size: data.rooms.size,
+      },
+      date: data.date ? dayjs(data.date).format('DD/MM/YYYY') : null,
+      start_time: data.start_time ? dayjs(data.start_time, 'HH:mm:ss').format('HH:mm') : null,
+      end_time: data.end_time ? dayjs(data.end_time, 'HH:mm:ss').format('HH:mm') : null,
+      repeat: data.repeat,
+      day_repeat: data.day_repeat,
+      user: data.user_profiles && {
+        id: data.user_profiles.id,
+        name: data.user_profiles.name,
+        email: data.user_profiles.email,
+        phone: data.user_profiles.phone,
+      },
+    };
+
+    res.json(formattedData);
   } catch (err) {
     console.error('Erro ao buscar reserva:', err);
     res.status(500).json({ error: 'Erro ao buscar reserva' });
   }
-
 }
 
 async function updateBooking(req, res) {
@@ -151,10 +219,10 @@ async function updateBooking(req, res) {
   if (req.body.description !== undefined) updateFields.description = req.body.description;
   if (req.body.room !== undefined) updateFields.room = req.body.room;
   if (req.body.date !== undefined) updateFields.date = req.body.date;
-  if (req.body.startTime !== undefined) updateFields.start_time = req.body.startTime;
-  if (req.body.endTime !== undefined) updateFields.end_time = req.body.endTime;
+  if (req.body.star_time !== undefined) updateFields.start_time = req.body.star_time;
+  if (req.body.end_time !== undefined) updateFields.end_time = req.body.end_time;
   if (req.body.repeat !== undefined) updateFields.repeat = req.body.repeat;
-  if (req.body.dayRepeat !== undefined) updateFields.day_repeat = req.body.dayRepeat;
+  if (req.body.day_repeat !== undefined) updateFields.day_repeat = req.body.day_repeat;
 
   try {
     // Busca os dados atuais para garantir que o ID existe
@@ -213,29 +281,29 @@ async function deleteBooking(req, res) {
 async function getBookingByFilter(req, res) {
   try {
     const { userId, date, room, repeat, dayRepeat } = req.body;
-        
+
     let query = supabase.from('bookings').select('*');
 
     if (userId) {
-        query = query.eq('user_id', userId);
+      query = query.eq('user_id', userId);
     }
     if (date) {
-        query = query.eq('date', date);
+      query = query.eq('date', date);
     }
     if (room) {
-        query = query.eq('room', room);
+      query = query.eq('room', room);
     }
     if (repeat) {
-        query = query.eq('repeat', repeat);
+      query = query.eq('repeat', repeat);
     }
     if (dayRepeat) {
-        query = query.eq('day_repeat', dayRepeat);
+      query = query.eq('day_repeat', dayRepeat);
     }
 
     const { data, error } = await query;
 
     if (error) {
-        return res.status(400).json({ error: error.message });
+      return res.status(400).json({ error: error.message });
     }
 
     const formattedData = data.map(booking => ({
@@ -257,9 +325,210 @@ async function getBookingByFilter(req, res) {
   }
 }
 
+async function getBookingMy(req, res) {
+  const userId = req.profile.id;
+  try {
+    const { data, error } = await supabase.from('bookings').select(`id,
+        description,
+        date,
+        start_time,
+        end_time,
+        repeat,
+        day_repeat,
+        user_profiles(id, name, email, phone),  
+        rooms(id, name, size) `).eq('user_id', userId);
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    const formattedData = data.map(booking => ({
+      id: booking.id,
+      description: booking.description,
+      room: booking.rooms ? {
+        id: booking.rooms.id,
+        name: booking.rooms.name,
+        size: booking.rooms.size,
+      } : null,
+      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+      start_time: booking.start_time ? dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm') : null,
+      end_time: booking.end_time ? dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm') : null,
+      repeat: booking.repeat,
+      day_repeat: booking.day_repeat,
+      user: booking.user_profiles ? {
+        id: booking.user_profiles.id,
+        name: booking.user_profiles.name,
+        email: booking.user_profiles.email,
+        phone: booking.user_profiles.phone,
+      } : null,
+    }));
+
+    res.json(formattedData);
+  } catch (err) {
+    console.error('Erro ao buscar reservas:', err);
+    res.status(500).json({ error: 'Erro ao buscar reservas' });
+  }
+}
+
+async function getBookingsByToday(req, res) { 
+  try {
+    const today = dayjs().startOf('day'); 
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`id,
+        description,
+        date,
+        start_time,
+        end_time,
+        repeat,
+        day_repeat,
+        user_profiles(id, name, email, phone),  
+        rooms(id, name, size) `)
+      .or(`repeat.eq.day,date.eq.${today.format('YYYY-MM-DD')}`); 
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // Formatação dos dados
+    const formattedData = data.map(booking => ({
+      id: booking.id,
+      description: booking.description,
+      room: booking.rooms ? {
+        id: booking.rooms.id,
+        name: booking.rooms.name,
+        size: booking.rooms.size,
+      } : null,
+      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+      start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
+      end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+      repeat: booking.repeat,
+      day_repeat: booking.day_repeat,
+      user: booking.user_profiles ? {
+        id: booking.user_profiles.id,
+        name: booking.user_profiles.name,
+        email: booking.user_profiles.email,
+        phone: booking.user_profiles.phone,
+      } : null,
+    }));
+
+    res.json(formattedData);
+  } catch (err) {
+    console.error('Erro ao buscar reservas:', err);
+    res.status(500).json({ error: 'Erro ao buscar reservas' });
+  }
+}
+
+async function getBookingsByWeek(req, res) {
+  try {
+    const startOfWeek = dayjs().startOf('week'); // Início da semana atual
+    const endOfWeek = dayjs().endOf('week'); // Fim da semana atual
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`id,
+        description,
+        date,
+        start_time,
+        end_time,
+        repeat,
+        day_repeat,
+        user_profiles(id, name, email, phone),  
+        rooms(id, name, size)`)
+        .or(`repeat.eq.week,date.gte.${startOfWeek.format('YYYY-MM-DD')},date.lte.${endOfWeek.format('YYYY-MM-DD')}`); // Filtra tanto as repetições semanais quanto as datas dentro da semana atual
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // Formatação dos dados
+    const formattedData = data.map(booking => ({
+      id: booking.id,
+      description: booking.description,
+      room: booking.rooms ? {
+        id: booking.rooms.id,
+        name: booking.rooms.name,
+        size: booking.rooms.size,
+      } : null,
+      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+      start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
+      end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+      repeat: booking.repeat,
+      day_repeat: booking.day_repeat,
+      user: booking.user_profiles ? {
+        id: booking.user_profiles.id,
+        name: booking.user_profiles.name,
+        email: booking.user_profiles.email,
+        phone: booking.user_profiles.phone,
+      } : null,
+    }));
+
+    res.json(formattedData);
+  } catch (err) {
+    console.error('Erro ao buscar reservas:', err);
+    res.status(500).json({ error: 'Erro ao buscar reservas' });
+  }
+}
+
+async function getBookingsByMonth(req, res) {
+  try {
+    const startOfMonth = dayjs().startOf('month'); // Início do mês atual
+    const endOfMonth = dayjs().endOf('month'); // Fim do mês atual
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`id,
+        description,
+        date,
+        start_time,
+        end_time,
+        repeat,
+        day_repeat,
+        user_profiles(id, name, email, phone),  
+        rooms(id, name, size)`)
+      .or(`repeat.eq.month,date.gte.${startOfMonth.format('YYYY-MM-DD')},date.lte.${endOfMonth.format('YYYY-MM-DD')}`); // Filtra tanto as repetições semanais quanto as datas dentro do mês atual
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // Formatação dos dados
+    const formattedData = data.map(booking => ({
+      id: booking.id,
+      description: booking.description,
+      room: booking.rooms ? {
+        id: booking.rooms.id,
+        name: booking.rooms.name,
+        size: booking.rooms.size,
+      } : null,
+      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+      start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
+      end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+      repeat: booking.repeat,
+      day_repeat: booking.day_repeat,
+      user: booking.user_profiles ? {
+        id: booking.user_profiles.id,
+        name: booking.user_profiles.name,
+        email: booking.user_profiles.email,
+        phone: booking.user_profiles.phone,
+      } : null,
+    }));
+
+    res.json(formattedData);
+  } catch (err) {
+    console.error('Erro ao buscar reservas:', err);
+    res.status(500).json({ error: 'Erro ao buscar reservas' });
+  }
+}
+
+
 router.route("/").post(middleware.requireAuth, createBooking);
-router.route("/").get(middleware.publicRoute, getBooking); // Precisa apenas de autenticação
-router.route("/filter").post(middleware.requireAuth, getBookingByFilter); 
+router.route("/").get(middleware.publicRoute, getBooking);
+router.route("/my").get(middleware.requireAuth, getBookingMy);
+router.route("/filter").post(middleware.requireAuth, getBookingByFilter);
+router.route("/today").get(middleware.publicRoute, getBookingsByToday);
+router.route("/week").get(middleware.publicRoute, getBookingsByWeek);
+router.route("/month").get(middleware.publicRoute, getBookingsByMonth);
 
 router.route("/:id").put(middleware.requireAdmin, updateBooking); // Precisa apenas de autenticação
 router.route("/:id").get(middleware.publicRoute, getBookingById); // Precisa apenas de autenticação

@@ -44,7 +44,7 @@ async function signUpUser(req, res) {
 }
 
 // Login de usuário
-async function signInUser(req, res) {
+async function loginUser(req, res) {
   const { email, password } = req.body;
   try {
     const { data: session, error } = await supabase.auth.signInWithPassword({
@@ -174,7 +174,7 @@ async function logout(req, res) {
 
 router.route("/register").post(middleware.requireAdmin, signUpUser); // Rota admin
 
-router.route("/login").post(middleware.publicRoute, signInUser); // Rota pública, sem autenticação necessária
+router.route("/login").post(middleware.publicRoute, loginUser); // Rota pública, sem autenticação necessária
 
 router.route("/delete").delete(middleware.requireAuth, deleteUser); // Precisa de autenticação e admin
 

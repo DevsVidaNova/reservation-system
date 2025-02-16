@@ -2,6 +2,7 @@ const supabase = require('../config/supabaseClient');
 const middleware = require('./middleware')
 const express = require("express");
 const router = express.Router();
+const dayjs = require('dayjs');
 
 // 📌 1. Analytics das salas
 async function getStats(req, res) {

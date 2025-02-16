@@ -91,7 +91,20 @@ async function deleteRoom(req, res) {
     res.status(500).json({ error: "Erro ao deletar sala." });
   }
 }
+// 📌 6. Pesquisar sala
+async function searchRoom(req, res) {
+  const { name } = req.body;
+  try {
+    const { data, error } = await supabase.from("rooms").select("*").ilike("name", `%${name}%`);
 
+    if (error) return res.status(404).json({ error: "Sala não encontrada." });
+
+    res.json(data);
+  } catch (err) {
+    console.error("Erro ao buscar sala:", err);
+    res.status(500).json({ error: "Erro ao buscar sala." });
+  }
+}
 module.exports = {
   createRoom,
   getRooms,
@@ -103,6 +116,7 @@ module.exports = {
 
 router.route("/").post(middleware.requireAdmin, createRoom);
 router.route("/").get(middleware.publicRoute, getRooms); 
+router.route("/search").get(middleware.publicRoute, searchRoom); 
 
 router.route("/:id").delete(middleware.requireAdmin, deleteRoom);
 router.route("/:id").get(middleware.publicRoute, getRoomById); 
