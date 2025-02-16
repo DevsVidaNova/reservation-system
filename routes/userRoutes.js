@@ -3,6 +3,6 @@ const router = express.Router();
 const { showUser, listUsers } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 
-router.get("/:id", authMiddleware, showUser);
-router.get("/", authMiddleware, listUsers);
+router.get("/:id", showUser);
+router.get("/", listUsers);
 module.exports = router;

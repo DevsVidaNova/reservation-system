@@ -97,7 +97,7 @@ async function getUserProfile(req, res) {
       console.error('Erro ao obter perfil:', profileError.message);
       return res.status(400).json({ error: profileError.message });
     }
-    return res.json({ profile: profileData });
+    return res.json( profileData );
   } catch (err) {
     console.error('Erro ao buscar usuário:', err);
     return res.status(500).json({ error: 'Erro ao buscar usuário.' });
