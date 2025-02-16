@@ -7,6 +7,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat');
 const router = express.Router();
 dayjs.extend(customParseFormat);
 
+// 📌 1. Criar uma nova reserva
 async function createBooking(req, res) {
   const userId = req.profile.id;
   const { description, room, date, start_time, end_time, repeat, day_repeat } = req.body;
@@ -110,7 +111,7 @@ async function createBooking(req, res) {
   }
 }
 
-
+// 📌 2. Listar todas reservas
 async function getBooking(req, res) {
   try {
     const { data, error } = await supabase
@@ -159,6 +160,7 @@ async function getBooking(req, res) {
   }
 }
 
+// 📌 3. Pegar reserva por ID
 async function getBookingById(req, res) {
   const { id } = req.params;
 
@@ -212,6 +214,7 @@ async function getBookingById(req, res) {
   }
 }
 
+// 📌 4. Atualizar reserva
 async function updateBooking(req, res) {
   const { id } = req.params;
   const updateFields = {};
@@ -259,6 +262,7 @@ async function updateBooking(req, res) {
   }
 }
 
+// 📌 5. Deletar reserva
 async function deleteBooking(req, res) {
   const { id } = req.params;
   try {
@@ -278,6 +282,7 @@ async function deleteBooking(req, res) {
   }
 }
 
+// 📌 6. Buscar com filtro
 async function getBookingByFilter(req, res) {
   try {
     const { userId, date, room, repeat, dayRepeat } = req.body;
@@ -325,6 +330,7 @@ async function getBookingByFilter(req, res) {
   }
 }
 
+// 📌 7. Listar minhas reservas
 async function getBookingMy(req, res) {
   const userId = req.profile.id;
   try {
@@ -370,6 +376,7 @@ async function getBookingMy(req, res) {
   }
 }
 
+// 📌 8. Listar reservas para hoje
 async function getBookingsByToday(req, res) { 
   try {
     const today = dayjs().startOf('day'); 
@@ -419,6 +426,7 @@ async function getBookingsByToday(req, res) {
   }
 }
 
+// 📌 9. Listar reservas para semana
 async function getBookingsByWeek(req, res) {
   try {
     const startOfWeek = dayjs().startOf('week'); // Início da semana atual
@@ -470,6 +478,7 @@ async function getBookingsByWeek(req, res) {
   }
 }
 
+// 📌 10. Listar reservas para o mes
 async function getBookingsByMonth(req, res) {
   try {
     const startOfMonth = dayjs().startOf('month'); // Início do mês atual
@@ -530,8 +539,8 @@ router.route("/today").get(middleware.publicRoute, getBookingsByToday);
 router.route("/week").get(middleware.publicRoute, getBookingsByWeek);
 router.route("/month").get(middleware.publicRoute, getBookingsByMonth);
 
-router.route("/:id").put(middleware.requireAdmin, updateBooking); // Precisa apenas de autenticação
-router.route("/:id").get(middleware.publicRoute, getBookingById); // Precisa apenas de autenticação
-router.route("/:id").delete(middleware.requireAuth, middleware.requireAdmin, deleteBooking); // Precisa de autenticação e admin
+router.route("/:id").put(middleware.requireAdmin, updateBooking); 
+router.route("/:id").get(middleware.publicRoute, getBookingById); 
+router.route("/:id").delete(middleware.requireAuth, middleware.requireAdmin, deleteBooking);
 
 module.exports = router;

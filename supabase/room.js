@@ -105,6 +105,7 @@ async function searchRoom(req, res) {
     res.status(500).json({ error: "Erro ao buscar sala." });
   }
 }
+
 module.exports = {
   createRoom,
   getRooms,
@@ -112,7 +113,6 @@ module.exports = {
   updateRoom,
   deleteRoom,
 };
-
 
 router.route("/").post(middleware.requireAdmin, createRoom);
 router.route("/").get(middleware.publicRoute, getRooms); 
