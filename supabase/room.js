@@ -30,6 +30,7 @@ async function createRoom(req, res) {
     res.status(500).json({ error: "Erro ao criar sala." });
   }
 }
+
 // 📌 2. Listar todas as salas
 async function getRooms(req, res) {
   try {
@@ -43,6 +44,7 @@ async function getRooms(req, res) {
     res.status(500).json({ error: "Erro ao buscar salas." });
   }
 }
+
 // 📌 3. Buscar uma sala por ID
 async function getRoomById(req, res) {
   const { id } = req.params;
@@ -58,6 +60,7 @@ async function getRoomById(req, res) {
     res.status(500).json({ error: "Erro ao buscar sala." });
   }
 }
+
 // 📌 4. Atualizar uma sala (somente os campos enviados)
 async function updateRoom(req, res) {
   const { id } = req.params;
@@ -79,6 +82,7 @@ async function updateRoom(req, res) {
     res.status(500).json({ error: "Erro ao atualizar sala." });
   }
 }
+
 // 📌 5. Deletar uma sala
 async function deleteRoom(req, res) {
   const { id } = req.params;
@@ -91,6 +95,7 @@ async function deleteRoom(req, res) {
     res.status(500).json({ error: "Erro ao deletar sala." });
   }
 }
+
 // 📌 6. Pesquisar sala
 async function searchRoom(req, res) {
   const { name } = req.body;
@@ -106,17 +111,7 @@ async function searchRoom(req, res) {
   }
 }
 
-module.exports = {
-  createRoom,
-  getRooms,
-  getRoomById,
-  updateRoom,
-  deleteRoom,
-};
-
-
-
-
+// 📌 0. Rotas com Middleware
 router.route("/").post(middleware.requireAdmin, createRoom);
 router.route("/").get(middleware.publicRoute, getRooms); 
 router.route("/search").get(middleware.publicRoute, searchRoom); 

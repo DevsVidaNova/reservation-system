@@ -155,6 +155,7 @@ const createUser = async (req, res) => {
     }
 };
 
+// 📌 0. Rotas com Middleware
 router.route("/").post(middleware.requireAdmin, createUser);
 router.route("/").get(middleware.requireAdmin, listUsers);
 router.route("/:id").get(middleware.requireAdmin, showUser);

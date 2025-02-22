@@ -484,6 +484,7 @@ async function duplicateScale(req, res) {
     }
 }
 
+// 📌 0. Rotas com Middleware
 router.route("/").post(middleware.requireAdmin, createScale);
 router.route("/").get(middleware.requireAuth, getAllScales);
 router.route("/confirm").post(middleware.requireAuth, confirmScale);

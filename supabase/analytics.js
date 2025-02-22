@@ -50,6 +50,7 @@ async function getStats(req, res) {
   }
   
 
+// 📌 0. Rotas com Middleware
 async function getCount(tableName) {
     try {
       const { count, error } = await supabase
@@ -57,7 +58,7 @@ async function getCount(tableName) {
         .select("*", { count: "exact", head: true });
   
       return { count, error };
-    } catch (err) {
+    } catch (err) { 
       return { error: err.message };
     }
   }

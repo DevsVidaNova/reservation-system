@@ -4,7 +4,7 @@ const middleware = require('./middleware')
 
 const router = express.Router();
 
-// Registrar de usuário
+// 📌 1. Registrar de usuário
 async function signUpUser(req, res) {
   const { email, password, name, phone } = req.body;
 
@@ -43,7 +43,7 @@ async function signUpUser(req, res) {
   return res.status(201).json({ message: 'Usuário registrado com sucesso', user });
 }
 
-// Login de usuário
+// 📌 2. Login de usuário
 async function loginUser(req, res) {
   const { email, password } = req.body;
   try {
@@ -76,7 +76,7 @@ async function loginUser(req, res) {
   }
 }
 
-// Obter perfil do usuário
+// 📌 3. Obter perfil do usuário
 async function getUserProfile(req, res) {
   const userId = req.query.id || req.user.id;
   if (req.role !== 'admin' && req.user.id !== userId) {
@@ -103,7 +103,7 @@ async function getUserProfile(req, res) {
     return res.status(500).json({ error: 'Erro ao buscar usuário.' });
   }
 }
-// Atualizar perfil do usuário apenas NAME E PHONE
+// 📌 4. Atualizar perfil do usuário apenas NAME E PHONE
 async function updateUserProfile(req, res) {
   const userId = req.query.id || req.user.id;
 
@@ -132,7 +132,7 @@ async function updateUserProfile(req, res) {
   }
 };
 
-// Deletar usuário
+// 📌 5. Deletar usuário
 async function deleteUser(req, res) {
   const userId = req.user.id;
   if (!userId) {
@@ -160,7 +160,7 @@ async function deleteUser(req, res) {
   }
 }
 
-//Logout do user
+//📌 6. Logout do user
 async function logout(req, res) {
   const { error } = await supabase.auth.signOut();
 
@@ -172,6 +172,7 @@ async function logout(req, res) {
   return res.json({ message: 'Logout realizado com sucesso.' });
 }
 
+// 📌 0. Rotas com Middleware
 router.route("/register").post(middleware.requireAdmin, signUpUser); // Rota admin
 
 router.route("/login").post(middleware.publicRoute, loginUser); // Rota pública, sem autenticação necessária
