@@ -114,6 +114,9 @@ module.exports = {
   deleteRoom,
 };
 
+
+
+
 router.route("/").post(middleware.requireAdmin, createRoom);
 router.route("/").get(middleware.publicRoute, getRooms); 
 router.route("/search").get(middleware.publicRoute, searchRoom); 

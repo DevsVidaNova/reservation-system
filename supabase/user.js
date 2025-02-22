@@ -5,6 +5,7 @@ const router = express.Router();
 
 const outputs = "id, name, phone, role, user_id, email";
 
+// 📌 1. Mostrar um usuario
 const showUser = async (req, res) => {
     const { id } = req.params;
     try {
@@ -21,6 +22,7 @@ const showUser = async (req, res) => {
     }
 };
 
+// 📌 2. Listar usuarios
 const listUsers = async (req, res) => {
     try {
         const { data: users, error } = await supabase
@@ -39,6 +41,7 @@ const listUsers = async (req, res) => {
     }
 };
 
+// 📌 3. Deletar um usuario
 const deleteUser = async (req, res) => {
     const userId = req.params.id
     if (!userId) {
@@ -66,6 +69,7 @@ const deleteUser = async (req, res) => {
     }
 }
 
+// 📌 3. Atualizar um usuario
 const updateUser = async (req, res) => {
     const userId = req.params.id;
     const { name, phone, email, role,  } = req.body;
@@ -112,6 +116,7 @@ const updateUser = async (req, res) => {
     }
 };
 
+// 📌 4. Criar um usuario
 const createUser = async (req, res) => { 
     const { name, phone, role, password, email } = req.body; // Sem email aqui, pois você não quer usar o email no processo
     console.log(req.body)

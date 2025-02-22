@@ -531,6 +531,7 @@ async function getBookingsByMonth(req, res) {
 }
 
 
+// Rotas com Middleware
 router.route("/").post(middleware.requireAuth, createBooking);
 router.route("/").get(middleware.publicRoute, getBooking);
 router.route("/my").get(middleware.requireAuth, getBookingMy);
