@@ -1,7 +1,8 @@
 # Gerenciamento de Reservas de Salas
-
 ## 📌 Descrição
 Este é um sistema de gerenciamento de reservas de salas, desenvolvido com **Express.js** para o backend. O objetivo é permitir o agendamento e administração eficiente de salas para diferentes finalidades.
+
+
 
 ## 🚀 Tecnologias Utilizadas
 - **Backend:** Node.js, Express.js, JavaScript
@@ -18,7 +19,6 @@ Este é um sistema de gerenciamento de reservas de salas, desenvolvido com **Exp
 ├── config/         # Configurações gerais (ex: conexão com BD)
 ├── server.js       # Inicialização do servidor
 ```
-
 ## 📌 Instalação e Execução
 1. Clone o repositório:
    ```bash
