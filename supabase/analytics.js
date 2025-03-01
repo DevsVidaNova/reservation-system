@@ -4,24 +4,26 @@ const express = require("express");
 const router = express.Router();
 const dayjs = require('dayjs');
 
-// 📌 1. Analytics das salas
+// 📌 1. Analytics geral
 async function getStats(req, res) {
     try {
       const countResults = await Promise.all([
         getCount("rooms"),
         getCount("bookings"),
         getCount("user_profiles"),
+        getCount("members")
       ]);
   
-      const [roomsCount, bookingsCount, usersCount] = countResults;
+      const [roomsCount, bookingsCount, usersCount, membersCount] = countResults;
   
-      if (roomsCount.error || bookingsCount.error || usersCount.error) {
+      if (roomsCount.error || bookingsCount.error || usersCount.error || membersCount.error) {
         return res.status(400).json({
           message: "Erro ao buscar estatísticas.",
           errors: {
             roomsError: roomsCount.error,
             bookingsError: bookingsCount.error,
             usersError: usersCount.error,
+            membersError: membersCount.error
           },
         });
       }
@@ -42,6 +44,7 @@ async function getStats(req, res) {
         bookings: bookingsCount.count || 0,
         users: usersCount.count || 0,
         week: weeklyBookingsCount || 0,
+        members: membersCount.count || 0,
       });
     } catch (error) {
       console.error("Erro ao buscar estatísticas:", error);
@@ -49,8 +52,7 @@ async function getStats(req, res) {
     }
   }
   
-
-// 📌 0. Rotas com Middleware
+// 📌 2. Função para contar registros
 async function getCount(tableName) {
     try {
       const { count, error } = await supabase
@@ -61,8 +63,9 @@ async function getCount(tableName) {
     } catch (err) { 
       return { error: err.message };
     }
-  }
-
+}
+  
+// 📌 0. Rotas com Middleware
 router.route("/").get(middleware.requireAdmin, getStats); 
 
-module.exports = router;
+module.exports = router; 
