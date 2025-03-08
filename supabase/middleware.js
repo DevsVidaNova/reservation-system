@@ -1,6 +1,4 @@
-const supabase = require('../config/supabaseClient');
-
-
+import supabase from "../config/supabaseClient.js";
 
 // 📌 1. Necessita de autenticacao
 const requireAuth = async (req, res, next) => {
@@ -72,4 +70,4 @@ const publicRoute = (req, res, next) => {
   next(); // Seguir para a próxima função (rota)
 };
 
-module.exports = { requireAuth, requireAdmin, publicRoute };
+export default{ requireAuth, requireAdmin, publicRoute };

@@ -1,7 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const bodyParser = require('body-parser')
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
+
+import roomRoutes from "./supabase/room.js";
+import bookingRoutes from "./supabase/booking.js";
+import authRoutes from "./supabase/auth.js";
+import analyticsRoutes from "./supabase/analytics.js";
+import userRoutes from "./supabase/user.js";
+import scaleRoutes from "./supabase/scale.js";
+import membersRoutes from "./supabase/members.js";
+
+dotenv.config();
 
 const app = express();
 const port = 8080;
@@ -9,16 +19,17 @@ const port = 8080;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/room', require('./supabase/room'));
-app.use('/booking', require('./supabase/booking'));
-app.use('/auth', require('./supabase/auth'));
-app.use('/analytics', require('./supabase/analytics'));
-app.use('/user', require('./supabase/user'));
-app.use('/scale', require('./supabase/scale'));
-app.use('/members', require('./supabase/members'));
+app.use("/room", roomRoutes);
+app.use("/booking", bookingRoutes);
+app.use("/auth", authRoutes);
+app.use("/analytics", analyticsRoutes);
+app.use("/user", userRoutes);
+app.use("/scale", scaleRoutes);
+app.use("/members", membersRoutes);
 
-app.get("/ping",(req, res) => {
-  return res.status(200).send('Pong');
+
+app.get("/ping", (req, res) => {
+  return res.status(200).send("Pong");
 });
 
 app.listen(port, () => {

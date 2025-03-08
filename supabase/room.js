@@ -1,11 +1,12 @@
-const supabase = require('../config/supabaseClient');
-const express = require("express");
-const middleware = require('./middleware')
-const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
+import express from "express";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
 
 const router = express.Router();
 dayjs.extend(customParseFormat);
+
 
 // 📌 1. Criar uma nova sala
 async function createRoom(req, res) {
@@ -121,4 +122,4 @@ router.route("/:id").get(middleware.publicRoute, getRoomById);
 router.route("/:id").put(middleware.requireAdmin, updateRoom); 
 
 
-module.exports = router;
+export default router;

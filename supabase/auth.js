@@ -1,6 +1,6 @@
-const supabase = require('../config/supabaseClient');
-const express = require("express");
-const middleware = require('./middleware')
+import express from "express";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
 
 const router = express.Router();
 
@@ -185,4 +185,4 @@ router.route("/edit").put(middleware.requireAuth, updateUserProfile); // Precisa
 
 router.route("/logout").post(middleware.requireAuth, logout); // Precisa apenas de autenticação
 
-module.exports = router;
+export default router;

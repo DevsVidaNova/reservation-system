@@ -1,8 +1,9 @@
-const supabase = require('../config/supabaseClient');
-const middleware = require('./middleware')
-const express = require("express");
+import express from "express";
+import dayjs from "dayjs";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
+
 const router = express.Router();
-const dayjs = require('dayjs');
 
 // 📌 1. Analytics geral
 async function getStats(req, res) {
@@ -66,6 +67,6 @@ async function getCount(tableName) {
 }
   
 // 📌 0. Rotas com Middleware
-router.route("/").get(middleware.requireAdmin, getStats); 
+router.route("/").get(middleware.requireAdmin, getStats);
 
-module.exports = router; 
+export default router;

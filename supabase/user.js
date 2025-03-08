@@ -1,7 +1,11 @@
-const supabase = require("../config/supabaseClient");
-const express = require("express");
-const middleware = require('./middleware')
+import express from "express";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
+
 const router = express.Router();
+dayjs.extend(customParseFormat);
 
 const outputs = "id, name, phone, role, user_id, email";
 
@@ -162,4 +166,4 @@ router.route("/:id").get(middleware.requireAdmin, showUser);
 router.route("/:id").delete(middleware.requireAdmin, deleteUser);
 router.route("/:id").put(middleware.requireAdmin, updateUser);
 
-module.exports = router;
+export default router;
