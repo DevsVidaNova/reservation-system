@@ -1,17 +1,15 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import bodyParser from "body-parser";
 
-import roomRoutes from "./supabase/room.js";
-import bookingRoutes from "./supabase/booking.js";
-import authRoutes from "./supabase/auth.js";
-import analyticsRoutes from "./supabase/analytics.js";
-import userRoutes from "./supabase/user.js";
-import scaleRoutes from "./supabase/scale.js";
-import membersRoutes from "./supabase/members.js";
+import roomRoutes from "./controller/room.js";
+import bookingRoutes from "./controller/booking.js";
+import authRoutes from "./controller/auth.js";
+import analyticsRoutes from "./controller/analytics.js";
+import userRoutes from "./controller/user.js";
+import scaleRoutes from "./controller/scale.js";
+import membersRoutes from "./controller/members.js";
 
-dotenv.config();
 
 const app = express();
 const port = 8080;
@@ -19,13 +17,15 @@ const port = 8080;
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use("/auth", authRoutes);
+
 app.use("/room", roomRoutes);
 app.use("/booking", bookingRoutes);
-app.use("/auth", authRoutes);
-app.use("/analytics", analyticsRoutes);
 app.use("/user", userRoutes);
+
 app.use("/scale", scaleRoutes);
 app.use("/members", membersRoutes);
+app.use("/analytics", analyticsRoutes);
 
 
 app.get("/ping", (req, res) => {
