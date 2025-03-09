@@ -10,7 +10,6 @@ import userRoutes from "./controller/user.js";
 import scaleRoutes from "./controller/scale.js";
 import membersRoutes from "./controller/members.js";
 
-
 const app = express();
 const port = 8080;
 
