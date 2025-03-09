@@ -1,21 +1,24 @@
 import express from "express";
 import dayjs from "dayjs";
+import "dayjs/locale/pt.js";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import supabase from "../config/supabaseClient.js";
 import middleware from "./middleware.js";
 
 const router = express.Router();
 dayjs.extend(customParseFormat);
+dayjs.locale('pt'); 
+
 
 // 📌 1. Criar uma nova reserva
 async function createBooking(req, res) {
   const userId = req.profile.id;
   const { description, room, date, start_time, end_time, repeat, day_repeat } = req.body;
 
-  if (!description || !room || !start_time || !end_time) { 
+  if (!description || !room || !start_time || !end_time) {
     return res.status(400).json({ error: 'Campos não foram enviados.' });
   }
-  if (!repeat && !date)  {
+  if (!repeat && !date) {
     return res.status(400).json({ error: 'Data é obrigatória, a menos que a reserva seja repetida.' });
   }
   if (start_time >= end_time || start_time === end_time || end_time <= start_time) {
@@ -31,7 +34,7 @@ async function createBooking(req, res) {
       conflictQueries.push(
         supabase.from('bookings').select('*')
           .eq('room', room)
-          .eq('date', formattedDate)  
+          .eq('date', formattedDate)
           .gte('start_time', start_time)
           .lte('end_time', end_time)
       );
@@ -43,7 +46,7 @@ async function createBooking(req, res) {
           supabase.from('bookings').select('*')
             .eq('room', room)
             .eq('repeat', 'day')
-            .eq('day_repeat', day_repeat) 
+            .eq('day_repeat', day_repeat)
             .gte('start_time', start_time)
             .lte('end_time', end_time)
         );
@@ -53,8 +56,8 @@ async function createBooking(req, res) {
         conflictQueries.push(
           supabase.from('bookings').select('*')
             .eq('room', room)
-            .eq('repeat', 'week')  
-            .eq('day_repeat', day_repeat)  
+            .eq('repeat', 'week')
+            .eq('day_repeat', day_repeat)
             .gte('start_time', start_time)
             .lte('end_time', end_time)
         );
@@ -63,8 +66,8 @@ async function createBooking(req, res) {
         conflictQueries.push(
           supabase.from('bookings').select('*')
             .eq('room', room)
-            .eq('repeat', 'month') 
-            .eq('day_repeat', day_repeat) 
+            .eq('repeat', 'month')
+            .eq('day_repeat', day_repeat)
             .gte('start_time', start_time)
             .lte('end_time', end_time)
         );
@@ -132,26 +135,39 @@ async function getBooking(req, res) {
       return res.status(400).json({ error: error.message });
     }
 
-    const formattedData = data.map(booking => ({
-      id: booking.id,
-      description: booking.description,
-      room: booking.rooms ? {
-        id: booking.rooms.id,
-        name: booking.rooms.name,
-        size: booking.rooms.size,
-      } : null,
-      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
-      start_time: booking.start_time ? dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm') : null,
-      end_time: booking.end_time ? dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm') : null,
-      repeat: booking.repeat,
-      day_repeat: booking.day_repeat,
-      user: booking.user_profiles ? {
-        id: booking.user_profiles.id,
-        name: booking.user_profiles.name,
-        email: booking.user_profiles.email,
-        phone: booking.user_profiles.phone,
-      } : null,
-    }));
+    // Mapeamento dos dias da semana abreviados
+    const weekDaysAbbr = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+    // Formatação dos dados
+    const formattedData = data.map(booking => {
+      const dayweek = booking.date ? parseInt(dayjs(booking.date).locale('pt').format('d')) : null; // Obter o número do dia da semana (0-6) e garantir que seja um inteiro
+      const repeatDay = booking.day_repeat ? weekDaysAbbr[booking.day_repeat] : null; // Dia da semana para repeat abreviado
+      const dayOfWeek = dayweek !== null ? weekDaysAbbr[dayweek] : null; // Dia da semana abreviado
+      const monthName = booking.date ? dayjs(booking.date).locale('pt').format('MMM') : null; // Nome do mês abreviado (Jan, Fev, Mar, etc.)
+
+      return {
+        id: booking.id,
+        description: booking.description,
+        room: booking.rooms ? {
+          id: booking.rooms.id,
+          name: booking.rooms.name,
+          size: booking.rooms.size,
+        } : null,
+        date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+        day_of_week: dayOfWeek == null ? repeatDay : dayOfWeek, // Garantir que day_of_week seja retornado corretamente
+        month: monthName, // Nome do mês abreviado
+        start_time: booking.start_time ? dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm') : null,
+        end_time: booking.end_time ? dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm') : null,
+        repeat: booking.repeat,
+        repeat_day: repeatDay,
+        user: booking.user_profiles ? {
+          id: booking.user_profiles.id,
+          name: booking.user_profiles.name,
+          email: booking.user_profiles.email,
+          phone: booking.user_profiles.phone,
+        } : null,
+      };
+    });
 
     res.json(formattedData);
   } catch (err) {
@@ -159,6 +175,7 @@ async function getBooking(req, res) {
     res.status(500).json({ error: 'Erro ao buscar reservas' });
   }
 }
+
 
 // 📌 3. Pegar reserva por ID
 async function getBookingById(req, res) {
@@ -249,7 +266,7 @@ async function updateBooking(req, res) {
       .update(updateFields)
       .eq("id", id)
       .select()
-      .single(); // Retorna apenas um item atualizado
+      .single(); 
 
     if (error) {
       return res.status(400).json({ error: error.message });
@@ -257,6 +274,7 @@ async function updateBooking(req, res) {
 
     res.json(data);
   } catch (err) {
+    console.log(err)
     console.error("Erro ao atualizar reserva:", err);
     res.status(500).json({ error: "Erro ao atualizar reserva" });
   }
@@ -348,26 +366,39 @@ async function getBookingMy(req, res) {
       return res.status(400).json({ error: error.message });
     }
 
-    const formattedData = data.map(booking => ({
-      id: booking.id,
-      description: booking.description,
-      room: booking.rooms ? {
-        id: booking.rooms.id,
-        name: booking.rooms.name,
-        size: booking.rooms.size,
-      } : null,
-      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
-      start_time: booking.start_time ? dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm') : null,
-      end_time: booking.end_time ? dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm') : null,
-      repeat: booking.repeat,
-      day_repeat: booking.day_repeat,
-      user: booking.user_profiles ? {
-        id: booking.user_profiles.id,
-        name: booking.user_profiles.name,
-        email: booking.user_profiles.email,
-        phone: booking.user_profiles.phone,
-      } : null,
-    }));
+    // Mapeamento dos dias da semana abreviados
+    const weekDaysAbbr = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+    // Formatação dos dados
+    const formattedData = data.map(booking => {
+      const dayweek = booking.date ? parseInt(dayjs(booking.date).locale('pt').format('d')) : null; // Obter o número do dia da semana (0-6) e garantir que seja um inteiro
+      const repeatDay = booking.day_repeat ? weekDaysAbbr[booking.day_repeat] : null; // Dia da semana para repeat abreviado
+      const dayOfWeek = dayweek !== null ? weekDaysAbbr[dayweek] : null; // Dia da semana abreviado
+      const monthName = booking.date ? dayjs(booking.date).locale('pt').format('MMM') : null; // Nome do mês abreviado (Jan, Fev, Mar, etc.)
+
+      return {
+        id: booking.id,
+        description: booking.description,
+        room: booking.rooms ? {
+          id: booking.rooms.id,
+          name: booking.rooms.name,
+          size: booking.rooms.size,
+        } : null,
+        date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+        day_of_week: dayOfWeek == null ? repeatDay : dayOfWeek, // Garantir que day_of_week seja retornado corretamente
+        month: monthName, // Nome do mês abreviado
+        start_time: booking.start_time ? dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm') : null,
+        end_time: booking.end_time ? dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm') : null,
+        repeat: booking.repeat,
+        repeat_day: repeatDay,
+        user: booking.user_profiles ? {
+          id: booking.user_profiles.id,
+          name: booking.user_profiles.name,
+          email: booking.user_profiles.email,
+          phone: booking.user_profiles.phone,
+        } : null,
+      };
+    });
 
     res.json(formattedData);
   } catch (err) {
@@ -377,9 +408,9 @@ async function getBookingMy(req, res) {
 }
 
 // 📌 8. Listar reservas para hoje
-async function getBookingsByToday(req, res) { 
+async function getBookingsByToday(req, res) {
   try {
-    const today = dayjs().startOf('day'); 
+    const today = dayjs().startOf('day');
     const { data, error } = await supabase
       .from('bookings')
       .select(`id,
@@ -391,7 +422,7 @@ async function getBookingsByToday(req, res) {
         day_repeat,
         user_profiles(id, name, email, phone),  
         rooms(id, name, size) `)
-      .or(`repeat.eq.day,date.eq.${today.format('YYYY-MM-DD')}`); 
+      .or(`repeat.eq.day,date.eq.${today.format('YYYY-MM-DD')}`);
 
     if (error) {
       return res.status(400).json({ error: error.message });
@@ -443,33 +474,45 @@ async function getBookingsByWeek(req, res) {
         day_repeat,
         user_profiles(id, name, email, phone),  
         rooms(id, name, size)`)
-        .or(`repeat.eq.week,date.gte.${startOfWeek.format('YYYY-MM-DD')},date.lte.${endOfWeek.format('YYYY-MM-DD')}`); // Filtra tanto as repetições semanais quanto as datas dentro da semana atual
+      .or(`repeat.eq.week,date.gte.${startOfWeek.format('YYYY-MM-DD')},date.lte.${endOfWeek.format('YYYY-MM-DD')}`); // Filtra tanto as repetições semanais quanto as datas dentro da semana atual
 
     if (error) {
       return res.status(400).json({ error: error.message });
     }
 
+    // Mapeamento dos dias da semana abreviados
+    const weekDaysAbbr = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
     // Formatação dos dados
-    const formattedData = data.map(booking => ({
-      id: booking.id,
-      description: booking.description,
-      room: booking.rooms ? {
-        id: booking.rooms.id,
-        name: booking.rooms.name,
-        size: booking.rooms.size,
-      } : null,
-      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
-      start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
-      end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
-      repeat: booking.repeat,
-      day_repeat: booking.day_repeat,
-      user: booking.user_profiles ? {
-        id: booking.user_profiles.id,
-        name: booking.user_profiles.name,
-        email: booking.user_profiles.email,
-        phone: booking.user_profiles.phone,
-      } : null,
-    }));
+    const formattedData = data.map(booking => {
+      const dayweek = booking.date ? parseInt(dayjs(booking.date).locale('pt').format('d')) : null; // Obter o número do dia da semana (0-6) e garantir que seja um inteiro
+      const repeatDay = booking.day_repeat ? weekDaysAbbr[booking.day_repeat] : null; // Dia da semana para repeat abreviado
+      const dayOfWeek = dayweek !== null ? weekDaysAbbr[dayweek] : null; // Dia da semana abreviado
+      const monthName = booking.date ? dayjs(booking.date).locale('pt').format('MMM') : null; // Nome do mês abreviado (Jan, Fev, Mar, etc.)
+
+      return {
+        id: booking.id,
+        description: booking.description,
+        room: booking.rooms ? {
+          id: booking.rooms.id,
+          name: booking.rooms.name,
+          size: booking.rooms.size,
+        } : null,
+        date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+        day_of_week: dayOfWeek == null ? repeatDay : dayOfWeek, // Garantir que day_of_week seja retornado corretamente
+        month: monthName, // Nome do mês abreviado
+        start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
+        end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+        repeat: booking.repeat,
+        repeat_day: repeatDay,
+        user: booking.user_profiles ? {
+          id: booking.user_profiles.id,
+          name: booking.user_profiles.name,
+          email: booking.user_profiles.email,
+          phone: booking.user_profiles.phone,
+        } : null,
+      };
+    });
 
     res.json(formattedData);
   } catch (err) {
@@ -478,7 +521,8 @@ async function getBookingsByWeek(req, res) {
   }
 }
 
-// 📌 10. Listar reservas para o mes
+
+// 📌 10. Listar reservas para o mês
 async function getBookingsByMonth(req, res) {
   try {
     const startOfMonth = dayjs().startOf('month'); // Início do mês atual
@@ -495,33 +539,45 @@ async function getBookingsByMonth(req, res) {
         day_repeat,
         user_profiles(id, name, email, phone),  
         rooms(id, name, size)`)
-      .or(`repeat.eq.month,date.gte.${startOfMonth.format('YYYY-MM-DD')},date.lte.${endOfMonth.format('YYYY-MM-DD')}`); // Filtra tanto as repetições semanais quanto as datas dentro do mês atual
+      .or(`repeat.eq.month,date.gte.${startOfMonth.format('YYYY-MM-DD')},date.lte.${endOfMonth.format('YYYY-MM-DD')}`); // Filtra tanto as repetições mensais quanto as datas dentro do mês atual
 
     if (error) {
       return res.status(400).json({ error: error.message });
     }
 
+    // Mapeamento dos dias da semana abreviados
+    const weekDaysAbbr = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
     // Formatação dos dados
-    const formattedData = data.map(booking => ({
-      id: booking.id,
-      description: booking.description,
-      room: booking.rooms ? {
-        id: booking.rooms.id,
-        name: booking.rooms.name,
-        size: booking.rooms.size,
-      } : null,
-      date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
-      start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
-      end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
-      repeat: booking.repeat,
-      day_repeat: booking.day_repeat,
-      user: booking.user_profiles ? {
-        id: booking.user_profiles.id,
-        name: booking.user_profiles.name,
-        email: booking.user_profiles.email,
-        phone: booking.user_profiles.phone,
-      } : null,
-    }));
+    const formattedData = data.map(booking => {
+      const dayweek = booking.date ? dayjs(booking.date).locale('pt').format('d') : null; // Obter o número do dia da semana (0-6)
+      const repeatDay = booking.day_repeat ? weekDaysAbbr[booking.day_repeat] : null; // Dia da semana para repeat abreviado
+      const dayOfWeek = weekDaysAbbr[dayweek]; // Dia da semana abreviado
+      const monthName = booking.date ? dayjs(booking.date).locale('pt').format('MMM') : null; // Nome do mês abreviado (Jan, Fev, Mar, etc.)
+
+      return {
+        id: booking.id,
+        description: booking.description,
+        room: booking.rooms ? {
+          id: booking.rooms.id,
+          name: booking.rooms.name,
+          size: booking.rooms.size,
+        } : null,
+        date: booking.date ? dayjs(booking.date).format('DD/MM/YYYY') : null,
+        day_of_week: dayOfWeek, // Dia da semana abreviado em pt-BR
+        month: monthName, // Nome do mês abreviado
+        start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
+        end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+        repeat: booking.repeat,
+        repeat_day: repeatDay, // Dia da repetição abreviado
+        user: booking.user_profiles ? {
+          id: booking.user_profiles.id,
+          name: booking.user_profiles.name,
+          email: booking.user_profiles.email,
+          phone: booking.user_profiles.phone,
+        } : null,
+      };
+    });
 
     res.json(formattedData);
   } catch (err) {
@@ -529,6 +585,135 @@ async function getBookingsByMonth(req, res) {
     res.status(500).json({ error: 'Erro ao buscar reservas' });
   }
 }
+
+// 📌 11. Listar reservas para o calendario
+async function getBookingsOfCalendar(req, res) {
+   try {
+    // Lê os parâmetros de mês e ano da query string
+    const { month, year } = req.query;
+
+    // Caso o mês ou o ano não sejam enviados, usamos o mês e ano atuais
+    const currentMonth = month ? parseInt(month, 10) : dayjs().month() + 1;
+    const currentYear = year ? parseInt(year, 10) : dayjs().year();
+
+
+    // Determina o intervalo do mês (início e fim do mês)
+    const startOfMonth = dayjs().year(currentYear).month(currentMonth - 1).startOf('month');
+    const endOfMonth = dayjs().year(currentYear).month(currentMonth - 1).endOf('month');
+
+    // Consulta as reservas no banco de dados para o mês
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`
+        id,
+        description,
+        date,
+        start_time,
+        end_time,
+        repeat,
+        day_repeat,
+        user_profiles(id, name, email, phone),
+        rooms(id, name, size)
+      `)
+      .gte('date', startOfMonth.format('YYYY-MM-DD')) // Filtra eventos após ou no início do mês
+      .lte('date', endOfMonth.format('YYYY-MM-DD')); // Filtra eventos antes ou no final do mês
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // Mapeamento dos dias da semana abreviados
+    const weekDaysAbbr = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+    // Formatação dos dados de eventos
+    const formattedData = [];
+
+    data.forEach(booking => {
+      // Certificando-se de que a data está no formato correto
+      const formattedDate = dayjs(booking.date); // O dayjs já pode processar datas no formato "YYYY-MM-DD"
+      
+      // Verifica se a data é válida
+      if (!formattedDate.isValid() && booking.repeat !== 'week') {
+        console.error('Data inválida:', booking.date);
+        return; // Pula o evento se a data for inválida e não for repetido semanalmente
+      }
+
+      const dayweek = formattedDate.isValid() ? formattedDate.locale('pt').format('d') : null; // Obter o número do dia da semana (0-6) se a data for válida
+      const repeatDay = booking.day_repeat ? weekDaysAbbr.indexOf(booking.day_repeat) : null; // Converte o nome do dia (ex: 'Seg') em um índice (0-6)
+      const dayOfWeek = weekDaysAbbr[dayweek]; // Dia da semana abreviado
+      const monthName = formattedDate.isValid() ? formattedDate.locale('pt').format('MMM') : null; // Nome do mês abreviado (Jan, Fev, Mar, etc.)
+
+      // Adicionando o evento principal
+      formattedData.push({
+        id: booking.id,
+        description: booking.description,
+        room: booking.rooms ? {
+          id: booking.rooms.id,
+          name: booking.rooms.name,
+          size: booking.rooms.size,
+        } : null,
+        date: formattedDate.isValid() ? formattedDate.format('YYYY-MM-DD') : null,
+        day_of_week: dayOfWeek, // Dia da semana abreviado em pt-BR
+        month: monthName, // Nome do mês abreviado
+        start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
+        end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+        repeat: booking.repeat,
+        repeat_day: booking.day_repeat, // Dia da repetição abreviado
+        user: booking.user_profiles ? {
+          id: booking.user_profiles.id,
+          name: booking.user_profiles.name,
+          email: booking.user_profiles.email,
+          phone: booking.user_profiles.phone,
+        } : null,
+      });
+
+      // Lógica para eventos repetidos semanalmente
+      if (booking.repeat === 'week' && repeatDay !== null) {
+        let currentDay = startOfMonth;
+
+        // Encontrar o primeiro dia correspondente à repetição no mês
+        while (currentDay.day() !== repeatDay) {
+          currentDay = currentDay.add(1, 'day'); // Avança até o próximo dia que coincide com repeat_day
+        }
+
+        // Agora, atualiza a data com todas as ocorrências daquela semana para o mês atual
+        while (currentDay.isBefore(endOfMonth, 'day')) {
+          formattedData.push({
+            id: booking.id,
+            description: booking.description,
+            room: booking.rooms ? {
+              id: booking.rooms.id,
+              name: booking.rooms.name,
+              size: booking.rooms.size,
+            } : null,
+            date: currentDay.format('DD/MM/YYYY'),
+            day_of_week: weekDaysAbbr[currentDay.day()], // Dia da semana abreviado
+            month: currentDay.format('MMM'), // Nome do mês abreviado
+            start_time: dayjs(booking.start_time, 'HH:mm:ss').format('HH:mm'),
+            end_time: dayjs(booking.end_time, 'HH:mm:ss').format('HH:mm'),
+            repeat: booking.repeat,
+            repeat_day: booking.day_repeat, // Dia da repetição abreviado
+            user: booking.user_profiles ? {
+              id: booking.user_profiles.id,
+              name: booking.user_profiles.name,
+              email: booking.user_profiles.email,
+              phone: booking.user_profiles.phone,
+            } : null,
+          });
+
+          // Avança para a próxima semana
+          currentDay = currentDay.add(1, 'week');
+        }
+      }
+    });
+
+    res.json(formattedData);
+  } catch (err) {
+    console.error('Erro ao buscar reservas:', err);
+    res.status(500).json({ error: 'Erro ao buscar reservas' });
+  }
+}
+
 
 // 📌 0. Rotas com Middleware
 router.route("/").post(middleware.requireAuth, createBooking);
@@ -538,9 +723,10 @@ router.route("/filter").post(middleware.requireAuth, getBookingByFilter);
 router.route("/today").get(middleware.publicRoute, getBookingsByToday);
 router.route("/week").get(middleware.publicRoute, getBookingsByWeek);
 router.route("/month").get(middleware.publicRoute, getBookingsByMonth);
+router.route("/calendar").get(middleware.publicRoute, getBookingsOfCalendar);
 
-router.route("/:id").put(middleware.requireAdmin, updateBooking); 
-router.route("/:id").get(middleware.publicRoute, getBookingById); 
+router.route("/:id").put(middleware.requireAdmin, updateBooking);
+router.route("/:id").get(middleware.publicRoute, getBookingById);
 router.route("/:id").delete(middleware.requireAuth, middleware.requireAdmin, deleteBooking);
 
 
