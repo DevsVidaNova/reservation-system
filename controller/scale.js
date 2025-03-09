@@ -1,8 +1,8 @@
-const supabase = require('../config/supabaseClient');
-const express = require("express");
-const middleware = require('./middleware')
-const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
+import express from "express";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
 
 const router = express.Router();
 dayjs.extend(customParseFormat);
@@ -484,6 +484,7 @@ async function duplicateScale(req, res) {
     }
 }
 
+// 📌 0. Rotas com Middleware
 router.route("/").post(middleware.requireAdmin, createScale);
 router.route("/").get(middleware.requireAuth, getAllScales);
 router.route("/confirm").post(middleware.requireAuth, confirmScale);
@@ -496,4 +497,4 @@ router.route("/:id").delete(middleware.requireAdmin, deleteScale);
 router.route("/:id").put(middleware.requireAdmin, updateScale);
 router.route("/:id").get(middleware.requireAuth, getScaleById);
 
-module.exports = router;
+export default router;

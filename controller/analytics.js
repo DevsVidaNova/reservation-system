@@ -1,27 +1,30 @@
-const supabase = require('../config/supabaseClient');
-const middleware = require('./middleware')
-const express = require("express");
-const router = express.Router();
-const dayjs = require('dayjs');
+import express from "express";
+import dayjs from "dayjs";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
 
-// 📌 1. Analytics das salas
+const router = express.Router();
+
+// 📌 1. Analytics geral
 async function getStats(req, res) {
     try {
       const countResults = await Promise.all([
         getCount("rooms"),
         getCount("bookings"),
         getCount("user_profiles"),
+        getCount("members")
       ]);
   
-      const [roomsCount, bookingsCount, usersCount] = countResults;
+      const [roomsCount, bookingsCount, usersCount, membersCount] = countResults;
   
-      if (roomsCount.error || bookingsCount.error || usersCount.error) {
+      if (roomsCount.error || bookingsCount.error || usersCount.error || membersCount.error) {
         return res.status(400).json({
           message: "Erro ao buscar estatísticas.",
           errors: {
             roomsError: roomsCount.error,
             bookingsError: bookingsCount.error,
             usersError: usersCount.error,
+            membersError: membersCount.error
           },
         });
       }
@@ -42,6 +45,7 @@ async function getStats(req, res) {
         bookings: bookingsCount.count || 0,
         users: usersCount.count || 0,
         week: weeklyBookingsCount || 0,
+        members: membersCount.count || 0,
       });
     } catch (error) {
       console.error("Erro ao buscar estatísticas:", error);
@@ -49,7 +53,7 @@ async function getStats(req, res) {
     }
   }
   
-
+// 📌 2. Função para contar registros
 async function getCount(tableName) {
     try {
       const { count, error } = await supabase
@@ -57,11 +61,12 @@ async function getCount(tableName) {
         .select("*", { count: "exact", head: true });
   
       return { count, error };
-    } catch (err) {
+    } catch (err) { 
       return { error: err.message };
     }
-  }
+}
+  
+// 📌 0. Rotas com Middleware
+router.route("/").get(middleware.requireAdmin, getStats);
 
-router.route("/").get(middleware.requireAdmin, getStats); 
-
-module.exports = router;
+export default router;

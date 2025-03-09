@@ -1,10 +1,15 @@
-const supabase = require("../config/supabaseClient");
-const express = require("express");
-const middleware = require('./middleware')
+import express from "express";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
+
 const router = express.Router();
+dayjs.extend(customParseFormat);
 
 const outputs = "id, name, phone, role, user_id, email";
 
+// 📌 1. Mostrar um usuario
 const showUser = async (req, res) => {
     const { id } = req.params;
     try {
@@ -21,6 +26,7 @@ const showUser = async (req, res) => {
     }
 };
 
+// 📌 2. Listar usuarios
 const listUsers = async (req, res) => {
     try {
         const { data: users, error } = await supabase
@@ -39,6 +45,7 @@ const listUsers = async (req, res) => {
     }
 };
 
+// 📌 3. Deletar um usuario
 const deleteUser = async (req, res) => {
     const userId = req.params.id
     if (!userId) {
@@ -66,6 +73,7 @@ const deleteUser = async (req, res) => {
     }
 }
 
+// 📌 3. Atualizar um usuario
 const updateUser = async (req, res) => {
     const userId = req.params.id;
     const { name, phone, email, role,  } = req.body;
@@ -112,6 +120,7 @@ const updateUser = async (req, res) => {
     }
 };
 
+// 📌 4. Criar um usuario
 const createUser = async (req, res) => { 
     const { name, phone, role, password, email } = req.body; // Sem email aqui, pois você não quer usar o email no processo
     console.log(req.body)
@@ -150,10 +159,11 @@ const createUser = async (req, res) => {
     }
 };
 
+// 📌 0. Rotas com Middleware
 router.route("/").post(middleware.requireAdmin, createUser);
 router.route("/").get(middleware.requireAdmin, listUsers);
 router.route("/:id").get(middleware.requireAdmin, showUser);
 router.route("/:id").delete(middleware.requireAdmin, deleteUser);
 router.route("/:id").put(middleware.requireAdmin, updateUser);
 
-module.exports = router;
+export default router;

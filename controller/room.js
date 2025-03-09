@@ -1,11 +1,12 @@
-const supabase = require('../config/supabaseClient');
-const express = require("express");
-const middleware = require('./middleware')
-const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
+import express from "express";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import supabase from "../config/supabaseClient.js";
+import middleware from "./middleware.js";
 
 const router = express.Router();
 dayjs.extend(customParseFormat);
+
 
 // 📌 1. Criar uma nova sala
 async function createRoom(req, res) {
@@ -30,6 +31,7 @@ async function createRoom(req, res) {
     res.status(500).json({ error: "Erro ao criar sala." });
   }
 }
+
 // 📌 2. Listar todas as salas
 async function getRooms(req, res) {
   try {
@@ -43,6 +45,7 @@ async function getRooms(req, res) {
     res.status(500).json({ error: "Erro ao buscar salas." });
   }
 }
+
 // 📌 3. Buscar uma sala por ID
 async function getRoomById(req, res) {
   const { id } = req.params;
@@ -58,6 +61,7 @@ async function getRoomById(req, res) {
     res.status(500).json({ error: "Erro ao buscar sala." });
   }
 }
+
 // 📌 4. Atualizar uma sala (somente os campos enviados)
 async function updateRoom(req, res) {
   const { id } = req.params;
@@ -79,6 +83,7 @@ async function updateRoom(req, res) {
     res.status(500).json({ error: "Erro ao atualizar sala." });
   }
 }
+
 // 📌 5. Deletar uma sala
 async function deleteRoom(req, res) {
   const { id } = req.params;
@@ -91,6 +96,7 @@ async function deleteRoom(req, res) {
     res.status(500).json({ error: "Erro ao deletar sala." });
   }
 }
+
 // 📌 6. Pesquisar sala
 async function searchRoom(req, res) {
   const { name } = req.body;
@@ -105,15 +111,8 @@ async function searchRoom(req, res) {
     res.status(500).json({ error: "Erro ao buscar sala." });
   }
 }
-module.exports = {
-  createRoom,
-  getRooms,
-  getRoomById,
-  updateRoom,
-  deleteRoom,
-};
 
-
+// 📌 0. Rotas com Middleware
 router.route("/").post(middleware.requireAdmin, createRoom);
 router.route("/").get(middleware.publicRoute, getRooms); 
 router.route("/search").get(middleware.publicRoute, searchRoom); 
@@ -123,4 +122,4 @@ router.route("/:id").get(middleware.publicRoute, getRoomById);
 router.route("/:id").put(middleware.requireAdmin, updateRoom); 
 
 
-module.exports = router;
+export default router;
