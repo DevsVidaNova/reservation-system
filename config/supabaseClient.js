@@ -4,18 +4,18 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-    console.error('As variáveis SUPABASE_URL e SUPABASE_KEY não estão definidas.');
+if (!supabaseUrl || !supabaseServiceRoleKey) {
+    console.error('As variáveis SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY não estão definidas.');
     process.exit(1); 
   }
   
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 async function testConnection() {
     try {
-        const { data, error } = await supabase.from('timelines').select('*').limit(1);
+        const { data, error } = await supabase.from('user_profiles').select('*').limit(1);
         if (error) {
             throw new Error(error.message);
         }

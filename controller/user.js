@@ -103,9 +103,7 @@ const updateUser = async (req, res) => {
             .update(updates)
             .eq("user_id", userId)
             .select();
-
         
-        console.log(data)
         if (updateError) {
             console.error("Erro ao atualizar perfil:", updateError.message);
             return res.status(400).json({ error: updateError.message });
@@ -122,26 +120,51 @@ const updateUser = async (req, res) => {
 
 // 📌 4. Criar um usuario
 const createUser = async (req, res) => { 
-    const { name, phone, role, password, email } = req.body; // Sem email aqui, pois você não quer usar o email no processo
-    console.log(req.body)
+    const { name, phone, role, password, email } = req.body;
     if (!name || !phone || !email || !password) { 
         return res.status(400).json({ error: "Dados inválidos." });
     }
     try {
-        const { data: user, session, error } = await supabase.auth.admin.createUser({
-            email, 
+        const { data, error } = await supabase.auth.signUp({
+            email,
             password,
-            email_confirm: false,
-        });
+            options: {
+              data: {
+                name,
+                phone,
+                role: role || "user", 
+              },
+            },
+          });
 
+          if (error) {
+            console.error("Erro ao criar usuário:", error);
+            return res.status(400).json({ error: "Erro ao criar usuário." });
+          }
+          
+          const { data: profile, error: profileError } = await supabase
+            .from("user_profiles")
+            .insert({ user_id: data.user.id, name, phone, email, role: "user" })
+            .single();
+          
+          if (profileError) {
+            console.error("Erro ao criar perfil:", profileError);
+            return res.status(400).json({ error: "Erro ao criar perfil." });
+          }
+
+          res.status(201).json({
+            message: "Usuário criado com sucesso.",
+            user: { name, email, phone, role, user_id: data.user.id },
+        });
+        /*
         if (error) {
             console.error("Erro ao criar usuário:", error);
             return res.status(400).json({ error: "Erro ao criar usuário." });
         }
 
-        const { data, error: profileError } = await supabase
+        const { data: user, error: profileError } = await supabase
             .from("user_profiles")
-            .insert({ name, phone, email, role, user_id: user.user.id })
+            .insert({ name, phone, email, role,})
             .single();
 
         if (profileError) {
@@ -153,9 +176,30 @@ const createUser = async (req, res) => {
             message: "Usuário criado com sucesso.",
             user: { name, email, phone, role, user_id: user.user.id },
         });
+        */
     } catch (err) {
         console.error("Erro ao criar usuário:", err);
         res.status(500).json({ error: "Erro ao criar usuário." });
+    }
+};
+
+
+// 📌 5. Listar usuarios para escala
+const listUsersScale = async (req, res) => {
+    try {
+        const { data: users, error } = await supabase
+            .from("user_profiles")
+            .select(outputs);
+
+        if (error) {
+            console.log(error);
+            return res.status(400).json({ message: "Erro ao buscar usuários." });
+        }
+
+        res.status(200).json(users);
+    } catch (err) {
+        console.error("Erro ao buscar usuários:", err);
+        res.status(500).json({ message: "Erro ao buscar usuários." });
     }
 };
 
