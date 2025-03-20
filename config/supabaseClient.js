@@ -10,9 +10,7 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
     console.error('As variáveis SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY não estão definidas.');
     process.exit(1); 
   }
-  
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-
 async function testConnection() {
     try {
         const { data, error } = await supabase.from('user_profiles').select('*').limit(1);
