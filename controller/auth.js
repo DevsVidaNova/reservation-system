@@ -11,8 +11,12 @@ async function signUpUser(req, res) {
   const { data: user, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        name: name, 
+      }
+    }
   },
-    { emailRedirectTo: '' }
   );
 
   if (error) {

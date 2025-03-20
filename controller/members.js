@@ -45,7 +45,9 @@ async function getMembers(req, res) {
       .select("*", { count: "exact" })
       .range(offset, offset + pageSize - 1);
 
-    if (error) throw error;
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
 
     const formattedData = data.map(member => ({
       ...member,
@@ -311,7 +313,7 @@ async function getAnalytics(req, res) {
     // 🔹 Retorna todas as estatísticas para o frontend
     res.json({
       marital: maritalStatusChart,
-      gender:genderChart,
+      gender: genderChart,
       children: childrenChart,
       age: ageStatistics,
       city: cityStatistics,
