@@ -9,21 +9,31 @@ const router = express.Router();
 dayjs.extend(customParseFormat);
 dayjs.locale('pt'); 
 
+const normalizeTime = (time) => {
+  // Se já estiver com 3 partes (HH:MM:SS), retorna como está
+  if (time.split(":").length === 3) return time;
+  // Se estiver com 2 partes (HH:MM), adiciona ":00"
+  return `${time}:00`;
+};
 
 // 📌 1. Criar uma nova reserva
 async function createBooking(req, res) {
   const userId = req.profile.id;
   const { description, room, date, start_time, end_time, repeat, day_repeat } = req.body;
-
-  if (!description || !room || !start_time || !end_time) {
+  const sanitizedRepeat = repeat === "null" ? null : repeat;
+  const formattedStartTime = normalizeTime(start_time);
+  const formattedEndTime = normalizeTime(end_time);
+  
+  if (!description || !room || !formattedStartTime || !formattedEndTime) {
     return res.status(400).json({ error: 'Campos não foram enviados.' });
   }
-  if (!repeat && !date) {
+  if (!sanitizedRepeat && !date) {
     return res.status(400).json({ error: 'Data é obrigatória, a menos que a reserva seja repetida.' });
   }
-  if (start_time >= end_time || start_time === end_time || end_time <= start_time) {
+  if (formattedStartTime >= formattedEndTime || formattedStartTime === formattedEndTime || formattedEndTime <= formattedStartTime) {
     return res.status(400).json({ error: 'Os horários são invalidos.' });
   }
+ 
 
   const formattedDate = dayjs(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
@@ -35,41 +45,41 @@ async function createBooking(req, res) {
         supabase.from('bookings').select('*')
           .eq('room', room)
           .eq('date', formattedDate)
-          .gte('start_time', start_time)
-          .lte('end_time', end_time)
+          .gte('start_time', formattedStartTime)
+          .lte('end_time', formattedEndTime)
       );
     }
 
-    if (repeat) {
-      if (repeat === 'day') {
+    if (sanitizedRepeat) {
+      if (sanitizedRepeat === 'day') {
         conflictQueries.push(
           supabase.from('bookings').select('*')
             .eq('room', room)
             .eq('repeat', 'day')
             .eq('day_repeat', day_repeat)
-            .gte('start_time', start_time)
-            .lte('end_time', end_time)
+            .gte('start_time', formattedStartTime)
+            .lte('end_time', formattedEndTime)
         );
       }
 
-      if (repeat === 'week') {
+      if (sanitizedRepeat === 'week') {
         conflictQueries.push(
           supabase.from('bookings').select('*')
             .eq('room', room)
             .eq('repeat', 'week')
             .eq('day_repeat', day_repeat)
-            .gte('start_time', start_time)
-            .lte('end_time', end_time)
+            .gte('start_time', formattedStartTime)
+            .lte('end_time', formattedEndTime)
         );
       }
-      if (repeat === 'month') {
+      if (sanitizedRepeat === 'month') {
         conflictQueries.push(
           supabase.from('bookings').select('*')
             .eq('room', room)
             .eq('repeat', 'month')
             .eq('day_repeat', day_repeat)
-            .gte('start_time', start_time)
-            .lte('end_time', end_time)
+            .gte('start_time', formattedStartTime)
+            .lte('end_time', formattedEndTime)
         );
       }
     }
@@ -80,7 +90,7 @@ async function createBooking(req, res) {
 
     // 🚨 **Verifica sobreposição de horário**
     const hasConflict = existingBookings.some(booking => {
-      return (start_time < booking.end_time && end_time > booking.start_time);
+      return (formattedStartTime < booking.end_time && formattedEndTime > booking.start_time);
     });
 
     if (hasConflict) {
@@ -93,10 +103,10 @@ async function createBooking(req, res) {
       .insert([{
         description,
         room,
-        date: repeat ? null : formattedDate,  // Para reservas repetidas, data será nula
-        start_time: start_time,
-        end_time: end_time,
-        repeat,
+        date: sanitizedRepeat ? null : formattedDate,  // Para reservas repetidas, data será nula
+        start_time: formattedStartTime,
+        end_time: formattedEndTime,
+        repeat: sanitizedRepeat,
         day_repeat: day_repeat,
         user_id: userId,
       }])
@@ -176,7 +186,6 @@ async function getBooking(req, res) {
   }
 }
 
-
 // 📌 3. Pegar reserva por ID
 async function getBookingById(req, res) {
   const { id } = req.params;
@@ -238,10 +247,10 @@ async function updateBooking(req, res) {
 
   if (req.body.description !== undefined) updateFields.description = req.body.description;
   if (req.body.room !== undefined) updateFields.room = req.body.room;
-  if (req.body.date !== undefined) updateFields.date = req.body.date;
-  if (req.body.star_time !== undefined) updateFields.start_time = req.body.star_time;
+  if (req.body.date !== undefined) updateFields.date = req.body.date ? dayjs(req.body.date ,'DD/MM/YYYY').format("YYYY-MM-DD") : null;
+  if (req.body.start_time !== undefined) updateFields.start_time = req.body.start_time;
   if (req.body.end_time !== undefined) updateFields.end_time = req.body.end_time;
-  if (req.body.repeat !== undefined) updateFields.repeat = req.body.repeat;
+  if (req.body.repeat !== undefined) updateFields.repeat = req.body.repeat === 'null' ? null : req.body.repeat;
   if (req.body.day_repeat !== undefined) updateFields.day_repeat = req.body.day_repeat;
 
   try {
@@ -269,6 +278,7 @@ async function updateBooking(req, res) {
       .single(); 
 
     if (error) {
+      console.log(error)
       return res.status(400).json({ error: error.message });
     }
 
@@ -541,7 +551,9 @@ async function getBookingsByMonth(req, res) {
         rooms(id, name, size)`)
       .or(`repeat.eq.month,date.gte.${startOfMonth.format('YYYY-MM-DD')},date.lte.${endOfMonth.format('YYYY-MM-DD')}`); // Filtra tanto as repetições mensais quanto as datas dentro do mês atual
 
+    console.log(data)
     if (error) {
+      console.log(error)
       return res.status(400).json({ error: error.message });
     }
 
