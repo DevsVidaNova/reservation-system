@@ -1,6 +1,7 @@
 import express from "express";
 import supabase from "../config/supabaseClient.js";
 import middleware from "./middleware.js";
+import { createSupabaseAnonClient } from "../config/supabaseAnonClient.js";
 
 const router = express.Router();
 
@@ -49,9 +50,10 @@ async function signUpUser(req, res) {
 
 // 📌 2. Login de usuário
 async function loginUser(req, res) {
+  const userClient = createSupabaseAnonClient()
   const { email, password } = req.body;
   try {
-    const { data: session, error } = await supabase.auth.signInWithPassword({
+    const { data: session, error } = await userClient.auth.signInWithPassword({
       email,
       password,
     });
@@ -62,7 +64,7 @@ async function loginUser(req, res) {
     }
 
     // Obter perfil do usuário após login
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await userClient
       .from('user_profiles')
       .select('*')
       .eq('user_id', session.user.id)
@@ -166,7 +168,8 @@ async function deleteUser(req, res) {
 
 //📌 6. Logout do user
 async function logout(req, res) {
-  const { error } = await supabase.auth.signOut();
+  const userClient = createSupabaseAnonClient()
+  const { error } = await userClient.auth.signOut();
 
   if (error) {
     console.error('Erro ao fazer logout:', error.message);
