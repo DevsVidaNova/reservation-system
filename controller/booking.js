@@ -11,94 +11,66 @@ dayjs.locale('pt');
 
 
 // 📌 1. Criar uma nova reserva
+// 📌 1. Criar uma nova reserva
 async function createBooking(req, res) {
   const userId = req.profile.id;
   const { description, room, date, start_time, end_time, repeat, day_repeat } = req.body;
 
   if (!description || !room || !start_time || !end_time) {
-    return res.status(400).json({ error: 'Campos não foram enviados.' });
+    return res.status(400).json({ error: 'Campos obrigatórios não foram enviados.' });
   }
+
   if (!repeat && !date) {
     return res.status(400).json({ error: 'Data é obrigatória, a menos que a reserva seja repetida.' });
   }
-  if (start_time >= end_time || start_time === end_time || end_time <= start_time) {
-    return res.status(400).json({ error: 'Os horários são invalidos.' });
+
+  if (start_time >= end_time) {
+    return res.status(400).json({ error: 'Os horários são inválidos.' });
   }
 
-  const formattedDate = dayjs(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+  const formattedDate = date ? dayjs(date, 'DD/MM/YYYY').format('YYYY-MM-DD') : null;
 
   try {
-    let conflictQueries = [];
+    // 🔍 Buscar reservas com possível conflito
+    const conflictFilters = repeat
+      ? { room, repeat, day_repeat }
+      : { room, date: formattedDate };
 
-    if (formattedDate) {
-      conflictQueries.push(
-        supabase.from('bookings').select('*')
-          .eq('room', room)
-          .eq('date', formattedDate)
-          .gte('start_time', start_time)
-          .lte('end_time', end_time)
-      );
+    const { data: existing, error: fetchError } = await supabase
+      .from('bookings')
+      .select('*')
+      .match(conflictFilters);
+
+    if (fetchError) {
+      return res.status(400).json({ error: fetchError.message });
     }
 
-    if (repeat) {
-      if (repeat === 'day') {
-        conflictQueries.push(
-          supabase.from('bookings').select('*')
-            .eq('room', room)
-            .eq('repeat', 'day')
-            .eq('day_repeat', day_repeat)
-            .gte('start_time', start_time)
-            .lte('end_time', end_time)
-        );
-      }
+    // 🚨 Validação real de sobreposição de horário
+    const hasConflict = existing.some(booking => {
+      const bookingStart = dayjs(booking.start_time, 'HH:mm:ss');
+      const bookingEnd = dayjs(booking.end_time, 'HH:mm:ss');
+      const newStart = dayjs(start_time, 'HH:mm');
+      const newEnd = dayjs(end_time, 'HH:mm');
 
-      if (repeat === 'week') {
-        conflictQueries.push(
-          supabase.from('bookings').select('*')
-            .eq('room', room)
-            .eq('repeat', 'week')
-            .eq('day_repeat', day_repeat)
-            .gte('start_time', start_time)
-            .lte('end_time', end_time)
-        );
-      }
-      if (repeat === 'month') {
-        conflictQueries.push(
-          supabase.from('bookings').select('*')
-            .eq('room', room)
-            .eq('repeat', 'month')
-            .eq('day_repeat', day_repeat)
-            .gte('start_time', start_time)
-            .lte('end_time', end_time)
-        );
-      }
-    }
-
-    // 🔥 Executa todas as consultas de conflito
-    const conflictResults = await Promise.all(conflictQueries);
-    const existingBookings = conflictResults.flatMap(result => result.data || []);
-
-    // 🚨 **Verifica sobreposição de horário**
-    const hasConflict = existingBookings.some(booking => {
-      return (start_time < booking.end_time && end_time > booking.start_time);
+      return newStart.isBefore(bookingEnd) && newEnd.isAfter(bookingStart);
     });
 
     if (hasConflict) {
-      return res.status(400).json({ error: 'Conflito de horário: já existe uma reserva nesse intervalo.' });
+      return res.status(400).json({ error: 'Já existe uma reserva nesse horário para a sala selecionada.' });
     }
 
-    // ✅ **Criação da reserva**
+    // ✅ Criar reserva
     const { data, error } = await supabase
       .from('bookings')
       .insert([{
         description,
         room,
-        date: repeat ? null : formattedDate,  // Para reservas repetidas, data será nula
-        start_time: start_time,
-        end_time: end_time,
+        date: repeat ? null : formattedDate,
+        start_time,
+        end_time,
         repeat,
-        day_repeat: day_repeat,
-        user_id: userId,
+        day_repeat,
+        user_id: userId
       }])
       .select()
       .single();
@@ -113,6 +85,8 @@ async function createBooking(req, res) {
     res.status(500).json({ error: 'Erro ao criar reserva' });
   }
 }
+
+
 
 // 📌 2. Listar todas reservas
 async function getBooking(req, res) {
