@@ -1,0 +1,236 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_auth_register",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/register",
+      "name": "Registrar Usuário",
+      "description": "Registra um novo usuário no sistema (requer admin)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"usuario@exemplo.com\",\n  \"password\": \"MinhaSenh@123\",\n  \"name\": \"João Silva\",\n  \"phone\": \"(11) 99999-9999\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_login",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login",
+      "description": "Autentica um usuário e retorna token JWT",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"usuario@exemplo.com\",\n  \"password\": \"MinhaSenh@123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067190000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_profile",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/profile",
+      "name": "Obter Perfil",
+      "description": "Obtém o perfil do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067180000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_edit",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/edit",
+      "name": "Atualizar Perfil",
+      "description": "Atualiza o perfil do usuário autenticado",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva Santos\",\n  \"phone\": \"(11) 88888-8888\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067170000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_delete",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/delete",
+      "name": "Deletar Conta",
+      "description": "Deleta a conta do usuário autenticado",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067160000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_logout",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/logout",
+      "name": "Logout",
+      "description": "Faz logout do usuário autenticado",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067150000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Auth Endpoints",
+      "description": "Endpoints de autenticação e gerenciamento de usuários",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067200000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_auth",
+      "parentId": null,
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Auth Module API",
+      "description": "Coleção de endpoints para o módulo de autenticação",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_auth",
+      "parentId": "wrk_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "jwt_token": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "jwt_token"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1704067200000,
+      "_type": "environment"
+    }
+  ]
+}

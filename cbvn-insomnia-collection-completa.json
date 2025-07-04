@@ -1,0 +1,892 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-15T12:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_cbvn_complete",
+      "parentId": null,
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "CBVN - API Completa",
+      "description": "Coleção completa de todos os módulos da API CBVN",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_cbvn_base",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "jwt_token": "",
+        "auth_token": "",
+        "user_id": "",
+        "room_id": "",
+        "scale_id": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "jwt_token",
+          "auth_token",
+          "user_id",
+          "room_id",
+          "scale_id"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1705312800000,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_analytics",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "📊 Analytics",
+      "description": "Endpoints de análise e estatísticas do sistema",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067200000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_analytics_stats",
+      "parentId": "fld_analytics",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/analytics/",
+      "name": "Obter Estatísticas",
+      "description": "Obtém estatísticas gerais do sistema (salas, reservas, usuários, membros e reservas da semana)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o registro foi bem-sucedido\nexpect(response.status).to.equal(201);\n\n// Testa se retorna dados do usuário\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.user).to.exist;\nexpect(body.user.email).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_members",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "👥 Membros",
+      "description": "Endpoints para gerenciamento de membros",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067140000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_members_create",
+      "parentId": "fld_members",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/members",
+      "name": "Criar Membro",
+      "description": "Cria um novo membro",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao@exemplo.com\",\n  \"phone\": \"(11) 99999-9999\",\n  \"gender\": \"Masculino\",\n  \"city\": \"São Paulo\",\n  \"marital_status\": \"Solteiro\",\n  \"birth_date\": \"1990-01-01\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067140000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o membro foi criado com sucesso\nexpect(response.status).to.equal(201);\n\n// Testa se retorna dados do membro\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.name).to.exist;\nexpect(body.email).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_list",
+      "parentId": "fld_members",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/members",
+      "name": "Listar Membros",
+      "description": "Lista todos os membros",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067130000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se os membros foram listados com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna array de membros\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('array');",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_get",
+      "parentId": "fld_members",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/members/1",
+      "name": "Buscar Membro por ID",
+      "description": "Busca um membro específico pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067120000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o membro foi encontrado\nexpect(response.status).to.equal(200);\n\n// Testa se retorna dados do membro\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.name).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_update",
+      "parentId": "fld_members",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/members/1",
+      "name": "Atualizar Membro",
+      "description": "Atualiza um membro existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva Santos\",\n  \"phone\": \"(11) 88888-8888\",\n  \"city\": \"Rio de Janeiro\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067110000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o membro foi atualizado com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna dados atualizados\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_delete",
+      "parentId": "fld_members",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/members/1",
+      "name": "Deletar Membro",
+      "description": "Deleta um membro",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067100000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o membro foi deletado com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna mensagem de confirmação\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.message).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_rooms",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "🏠 Salas",
+      "description": "Endpoints para gerenciamento de salas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067090000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_rooms_create",
+      "parentId": "fld_rooms",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/rooms",
+      "name": "Criar Sala",
+      "description": "Cria uma nova sala",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Sala Principal\",\n  \"capacity\": 100,\n  \"description\": \"Sala principal para cultos\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067090000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a sala foi criada com sucesso\nexpect(response.status).to.equal(201);\n\n// Testa se retorna dados da sala\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.name).to.exist;\nexpect(body.capacity).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_rooms_list",
+      "parentId": "fld_rooms",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/rooms",
+      "name": "Listar Salas",
+      "description": "Lista todas as salas",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067080000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se as salas foram listadas com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna array de salas\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('array');",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_scales",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "📅 Escalas",
+      "description": "Endpoints para gerenciamento de escalas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067070000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_scales_create",
+      "parentId": "fld_scales",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/scales",
+      "name": "Criar Escala",
+      "description": "Cria uma nova escala",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Escala Domingo\",\n  \"date\": \"2024-01-07\",\n  \"time\": \"09:00\",\n  \"description\": \"Escala para culto dominical\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067070000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a escala foi criada com sucesso\nexpect(response.status).to.equal(201);\n\n// Testa se retorna dados da escala\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.title).to.exist;\nexpect(body.date).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_scales_list",
+      "parentId": "fld_scales",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/scales",
+      "name": "Listar Escalas",
+      "description": "Lista todas as escalas",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067060000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se as escalas foram listadas com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna array de escalas\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('array');",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_users",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "👤 Usuários",
+      "description": "Endpoints para gerenciamento de usuários",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067050000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_users_create",
+      "parentId": "fld_users",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/users",
+      "name": "Criar Usuário",
+      "description": "Cria um novo usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"usuario@exemplo.com\",\n  \"password\": \"MinhaSenh@123\",\n  \"name\": \"João Silva\",\n  \"phone\": \"(11) 99999-9999\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067050000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o usuário foi criado com sucesso\nexpect(response.status).to.equal(201);\n\n// Testa se retorna dados do usuário\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.email).to.exist;\nexpect(body.name).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_users_list",
+      "parentId": "fld_users",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/users",
+      "name": "Listar Usuários",
+      "description": "Lista todos os usuários",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067040000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se os usuários foram listados com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna array de usuários\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('array');",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_booking",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "📅 Reservas",
+      "description": "Endpoints para gerenciamento de reservas de salas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1705312800000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_booking_create",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking",
+      "name": "📌 Criar Reserva",
+      "description": "Criar uma nova reserva com validação de conflitos",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Reunião de planejamento\",\n  \"room\": \"sala-01\",\n  \"date\": \"2024-01-20\",\n  \"start_time\": \"09:00\",\n  \"end_time\": \"10:30\",\n  \"repeat\": \"none\",\n  \"day_repeat\": null\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a resposta foi bem-sucedida\nexpect(response.status).to.equal(200);\n\n// Testa se o corpo da resposta contém dados\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.data).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_list_all",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking",
+      "name": "📋 Listar Todas as Reservas",
+      "description": "Buscar todas as reservas com informações de usuário e sala",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312770000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se as reservas foram listadas com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna array de reservas\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('array');",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_get_by_id",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/123",
+      "name": "🔍 Buscar Reserva por ID",
+      "description": "Buscar uma reserva específica pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312750000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a reserva foi atualizada com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna dados atualizados\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_update",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/123",
+      "name": "✏️ Atualizar Reserva",
+      "description": "Atualizar uma reserva existente com validação de conflitos",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Reunião de planejamento - ATUALIZADA\",\n  \"room\": \"sala-02\",\n  \"start_time\": \"10:00\",\n  \"end_time\": \"11:30\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312780000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a reserva foi criada com sucesso\nexpect(response.status).to.equal(201);\n\n// Testa se retorna dados da reserva\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.room_id).to.exist;\nexpect(body.date).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_delete",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/123",
+      "name": "🗑️ Deletar Reserva",
+      "description": "Deletar uma reserva existente",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312760000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a reserva foi encontrada\nexpect(response.status).to.equal(200);\n\n// Testa se retorna dados da reserva\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.room_id).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_today",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/today",
+      "name": "📅 Reservas de Hoje",
+      "description": "Listar todas as reservas para o dia atual",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312790000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a resposta foi bem-sucedida\nexpect(response.status).to.equal(200);\n\n// Testa se o corpo da resposta é um array\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('array');",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_cbvn_complete",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "🔐 Autenticação",
+      "description": "Endpoints de autenticação e gerenciamento de usuários",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067190000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_auth_register",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/register",
+      "name": "Registrar Usuário",
+      "description": "Registra um novo usuário no sistema (requer admin)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"usuario@exemplo.com\",\n  \"password\": \"MinhaSenh@123\",\n  \"name\": \"João Silva\",\n  \"phone\": \"(11) 99999-9999\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_login",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login",
+      "description": "Autentica um usuário e retorna token JWT",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"usuario@exemplo.com\",\n  \"password\": \"MinhaSenh@123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067190000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o login foi bem-sucedido\nexpect(response.status).to.equal(200);\n\n// Testa se retorna token de acesso\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.access_token).to.exist;\nexpect(body.user).to.exist;\n\n// Salva o token para uso em outras requisições\ninsomnia.environment.set('jwt_token', body.access_token);",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_profile",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/profile",
+      "name": "Obter Perfil",
+      "description": "Obtém o perfil do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067180000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o perfil foi obtido com sucesso\nexpect(response.status).to.equal(200);\n\n// Testa se retorna dados do perfil\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.id).to.exist;\nexpect(body.email).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_edit",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/edit",
+      "name": "Atualizar Perfil",
+      "description": "Atualiza o perfil do usuário autenticado",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva Santos\",\n  \"phone\": \"(11) 88888-8888\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067170000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a atualização foi bem-sucedida\nexpect(response.status).to.equal(200);\n\n// Testa se retorna dados atualizados\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.message).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_delete",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/delete",
+      "name": "Deletar Conta",
+      "description": "Deleta a conta do usuário autenticado",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067160000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se a exclusão foi bem-sucedida\nexpect(response.status).to.equal(200);\n\n// Testa se retorna mensagem de confirmação\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.message).to.exist;",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_logout",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/logout",
+      "name": "Logout",
+      "description": "Faz logout do usuário autenticado",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067150000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "tests": "const response = insomnia.response;\nconst expect = insomnia.expect;\n\n// Testa se o logout foi bem-sucedido\nexpect(response.status).to.equal(200);\n\n// Testa se retorna mensagem de confirmação\nconst body = JSON.parse(response.body);\nexpect(body).to.be.an('object');\nexpect(body.message).to.exist;",
+      "_type": "request"
+    }
+  ]
+}

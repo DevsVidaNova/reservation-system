@@ -1,0 +1,79 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_analytics_stats",
+      "parentId": "fld_analytics",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/analytics/",
+      "name": "Obter Estatísticas",
+      "description": "Obtém estatísticas gerais do sistema (salas, reservas, usuários, membros e reservas da semana)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_analytics",
+      "parentId": "wrk_analytics",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Analytics Endpoints",
+      "description": "Endpoints de análise e estatísticas do sistema",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067200000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_analytics",
+      "parentId": null,
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Analytics Module API",
+      "description": "Coleção de endpoints para o módulo de analytics",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_analytics",
+      "parentId": "wrk_analytics",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "jwt_token": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "jwt_token"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1704067200000,
+      "_type": "environment"
+    }
+  ]
+}

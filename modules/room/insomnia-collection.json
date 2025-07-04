@@ -1,0 +1,245 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-15T10:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_room_create",
+      "parentId": "fld_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/room",
+      "name": "Criar Sala",
+      "description": "Criar uma nova sala no sistema",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Sala de Reuniões A\",\n  \"size\": 20,\n  \"description\": \"Sala equipada com projetor e ar condicionado\",\n  \"exclusive\": false,\n  \"status\": \"ativa\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_room_list",
+      "parentId": "fld_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/room?page=1&limit=10",
+      "name": "Listar Salas",
+      "description": "Listar todas as salas com paginação",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Número da página",
+          "id": "pair_page"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "description": "Itens por página",
+          "id": "pair_limit"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1705312799000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_room_get_by_id",
+      "parentId": "fld_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/room/{{ _.room_id }}",
+      "name": "Buscar Sala por ID",
+      "description": "Buscar uma sala específica pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1705312798000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_room_update",
+      "parentId": "fld_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/room/{{ _.room_id }}",
+      "name": "Atualizar Sala",
+      "description": "Atualizar dados de uma sala existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Sala de Reuniões A - Atualizada\",\n  \"size\": 25,\n  \"description\": \"Sala equipada com projetor, ar condicionado e sistema de som\",\n  \"exclusive\": true,\n  \"status\": \"ativa\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312797000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_room_delete",
+      "parentId": "fld_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/room/{{ _.room_id }}",
+      "name": "Deletar Sala",
+      "description": "Deletar uma sala do sistema",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312796000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_room_search",
+      "parentId": "fld_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/room/search?name=Reuniões",
+      "name": "Buscar Sala por Nome",
+      "description": "Buscar salas por nome (busca parcial)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "name",
+          "value": "Reuniões",
+          "description": "Nome ou parte do nome da sala",
+          "id": "pair_name"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1705312795000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_room",
+      "parentId": "wrk_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "Room Module",
+      "description": "Endpoints para gerenciamento de salas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1705312800000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_room",
+      "parentId": null,
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "CBVN - Room Module",
+      "description": "API endpoints para o módulo de salas do sistema CBVN",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_room",
+      "parentId": "wrk_room",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000/api",
+        "jwt_token": "seu_jwt_token_aqui",
+        "room_id": "id_da_sala_aqui"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "jwt_token",
+          "room_id"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1705312800000,
+      "_type": "environment"
+    }
+  ]
+}
