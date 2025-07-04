@@ -1,0 +1,549 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-15T10:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_booking_create",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking",
+      "name": "📌 Criar Reserva",
+      "description": "Criar uma nova reserva com validação de conflitos",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Reunião de planejamento\",\n  \"room\": \"sala-01\",\n  \"date\": \"2024-01-20\",\n  \"start_time\": \"09:00\",\n  \"end_time\": \"10:30\",\n  \"repeat\": \"none\",\n  \"day_repeat\": null\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_create_recurring_daily",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking",
+      "name": "📌 Criar Reserva Recorrente (Diária)",
+      "description": "Criar reserva que se repete diariamente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Stand-up diário\",\n  \"room\": \"sala-02\",\n  \"date\": \"2024-01-20\",\n  \"start_time\": \"09:00\",\n  \"end_time\": \"09:30\",\n  \"repeat\": \"day\",\n  \"day_repeat\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312799000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_create_recurring_weekly",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking",
+      "name": "📌 Criar Reserva Recorrente (Semanal)",
+      "description": "Criar reserva que se repete semanalmente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Reunião semanal de equipe\",\n  \"room\": \"sala-03\",\n  \"date\": \"2024-01-22\",\n  \"start_time\": \"14:00\",\n  \"end_time\": \"15:30\",\n  \"repeat\": \"week\",\n  \"day_repeat\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312798000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_create_recurring_monthly",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking",
+      "name": "📌 Criar Reserva Recorrente (Mensal)",
+      "description": "Criar reserva que se repete mensalmente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Reunião mensal de resultados\",\n  \"room\": \"sala-04\",\n  \"date\": \"2024-01-15\",\n  \"start_time\": \"16:00\",\n  \"end_time\": \"17:00\",\n  \"repeat\": \"month\",\n  \"day_repeat\": 15\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312797000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_list_all",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking",
+      "name": "📋 Listar Todas as Reservas",
+      "description": "Buscar todas as reservas com informações de usuário e sala",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312796000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_get_by_id",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/123",
+      "name": "🔍 Buscar Reserva por ID",
+      "description": "Buscar uma reserva específica pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312795000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_update",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/123",
+      "name": "✏️ Atualizar Reserva",
+      "description": "Atualizar uma reserva existente com validação de conflitos",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Reunião de planejamento - ATUALIZADA\",\n  \"room\": \"sala-02\",\n  \"start_time\": \"10:00\",\n  \"end_time\": \"11:30\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312794000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_delete",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/123",
+      "name": "🗑️ Deletar Reserva",
+      "description": "Deletar uma reserva existente",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312793000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_filter",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/filter",
+      "name": "🔍 Buscar com Filtros",
+      "description": "Buscar reservas com múltiplos filtros",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"user_id\": \"user-123\",\n  \"room\": \"sala-01\",\n  \"date\": \"2024-01-20\",\n  \"repeat\": \"none\",\n  \"day_repeat\": null\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312792000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_my",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/my/user-123",
+      "name": "👤 Minhas Reservas",
+      "description": "Listar reservas de um usuário específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312791000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_today",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/today",
+      "name": "📅 Reservas de Hoje",
+      "description": "Listar todas as reservas para o dia atual",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312790000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_week",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/week",
+      "name": "📅 Reservas da Semana",
+      "description": "Listar todas as reservas para a semana atual",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312789000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_month",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/month",
+      "name": "📅 Reservas do Mês",
+      "description": "Listar todas as reservas para o mês atual",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312788000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_calendar",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/calendar?month=1&year=2024",
+      "name": "📅 Calendário de Reservas",
+      "description": "Buscar reservas para um mês/ano específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "month",
+          "value": "1",
+          "description": "Mês (1-12)"
+        },
+        {
+          "name": "year",
+          "value": "2024",
+          "description": "Ano (YYYY)"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312787000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_booking_search",
+      "parentId": "fld_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/booking/search?description=reunião",
+      "name": "🔍 Buscar por Descrição",
+      "description": "Buscar reservas por descrição (busca parcial)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "description",
+          "value": "reunião",
+          "description": "Termo de busca na descrição"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312786000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_booking",
+      "parentId": "wrk_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "📅 Booking API",
+      "description": "Endpoints para gerenciamento de reservas de salas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1705312800000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_booking",
+      "parentId": null,
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "CBVN - Booking Module",
+      "description": "API de reservas de salas do sistema CBVN",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_booking_base",
+      "parentId": "wrk_booking",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3001/api",
+        "auth_token": "your-jwt-token-here"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "auth_token"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1705312800000,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_booking_prod",
+      "parentId": "env_booking_base",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "Production",
+      "data": {
+        "base_url": "https://your-production-api.com/api"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url"
+        ]
+      },
+      "color": "#ff6b6b",
+      "isPrivate": false,
+      "metaSortKey": 1705312800001,
+      "_type": "environment"
+    }
+  ]
+}

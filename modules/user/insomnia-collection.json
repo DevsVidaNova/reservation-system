@@ -1,0 +1,288 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_user_create",
+      "parentId": "fld_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/user",
+      "name": "Criar Usuário",
+      "description": "Cria um novo usuário no sistema",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao.silva@email.com\",\n  \"phone\": \"(11) 99999-9999\",\n  \"password\": \"senha123\",\n  \"role\": \"user\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_user_list",
+      "parentId": "fld_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/user",
+      "name": "Listar Usuários",
+      "description": "Lista todos os usuários com paginação",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Número da página",
+          "id": "pair_page"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "description": "Itens por página",
+          "id": "pair_limit"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067199000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_user_get_by_id",
+      "parentId": "fld_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/user/{{ _.user_id }}",
+      "name": "Buscar Usuário por ID",
+      "description": "Busca um usuário específico pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067198000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_user_update",
+      "parentId": "fld_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/user/{{ _.user_id }}",
+      "name": "Atualizar Usuário",
+      "description": "Atualiza os dados de um usuário",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva Santos\",\n  \"phone\": \"(11) 88888-8888\",\n  \"role\": \"admin\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067197000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_user_delete",
+      "parentId": "fld_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/user/{{ _.user_id }}",
+      "name": "Deletar Usuário",
+      "description": "Remove um usuário do sistema",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067196000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_user_login",
+      "parentId": "fld_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login",
+      "description": "Autentica um usuário e retorna o token JWT",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"joao.silva@email.com\",\n  \"password\": \"senha123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067195000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_user_profile",
+      "parentId": "fld_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/auth/profile",
+      "name": "Perfil do Usuário",
+      "description": "Obtém o perfil do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067194000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_user",
+      "parentId": "wrk_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "User Module",
+      "description": "Endpoints para gerenciamento de usuários",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067200000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_user",
+      "parentId": null,
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "CBVN - User Module",
+      "description": "Coleção de endpoints para o módulo de usuários do sistema CBVN",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_user",
+      "parentId": "wrk_user",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "jwt_token": "",
+        "user_id": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "jwt_token",
+          "user_id"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1704067200000,
+      "_type": "environment"
+    }
+  ]
+}

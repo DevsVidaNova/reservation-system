@@ -1,0 +1,402 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-15T10:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_members_create",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members",
+      "name": "Criar Membro",
+      "description": "Criar um novo membro",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"full_name\": \"João Silva Santos\",\n  \"birth_date\": \"15/03/1990\",\n  \"gender\": \"Masculino\",\n  \"phone\": \"(11) 99999-9999\",\n  \"email\": \"joao.silva@email.com\",\n  \"cpf\": \"123.456.789-00\",\n  \"rg\": \"12.345.678-9\",\n  \"address\": \"Rua das Flores, 123\",\n  \"city\": \"São Paulo\",\n  \"state\": \"SP\",\n  \"zip_code\": \"01234-567\",\n  \"marital_status\": \"Solteiro\",\n  \"has_children\": false,\n  \"children_count\": 0,\n  \"profession\": \"Desenvolvedor\",\n  \"notes\": \"Membro ativo da comunidade\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_list",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members?page=1&limit=10",
+      "name": "Listar Membros",
+      "description": "Listar todos os membros com paginação",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Número da página",
+          "id": "pair_page"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "description": "Itens por página",
+          "id": "pair_limit"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312700000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_get_by_id",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/1",
+      "name": "Buscar Membro por ID",
+      "description": "Buscar um membro específico pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312600000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_update",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/1",
+      "name": "Atualizar Membro",
+      "description": "Atualizar dados de um membro",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"full_name\": \"João Silva Santos Atualizado\",\n  \"phone\": \"(11) 88888-8888\",\n  \"email\": \"joao.novo@email.com\",\n  \"address\": \"Rua Nova, 456\",\n  \"city\": \"Rio de Janeiro\",\n  \"state\": \"RJ\",\n  \"marital_status\": \"Casado\",\n  \"has_children\": true,\n  \"children_count\": 2,\n  \"profession\": \"Engenheiro de Software\",\n  \"notes\": \"Dados atualizados\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_delete",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/1",
+      "name": "Deletar Membro",
+      "description": "Deletar um membro",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312400000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_search_by_name",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/search",
+      "name": "Buscar por Nome",
+      "description": "Buscar membros pelo nome",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"full_name\": \"João\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312300000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_filter_by_gender",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/filter",
+      "name": "Filtrar por Gênero",
+      "description": "Filtrar membros por gênero",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"field\": \"gender\",\n  \"value\": \"Masculino\",\n  \"operator\": \"eq\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_filter_by_city",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/filter",
+      "name": "Filtrar por Cidade",
+      "description": "Filtrar membros por cidade",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"field\": \"city\",\n  \"value\": \"São Paulo\",\n  \"operator\": \"ilike\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312100000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_filter_by_marital_status",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/filter",
+      "name": "Filtrar por Estado Civil",
+      "description": "Filtrar membros por estado civil",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"field\": \"marital_status\",\n  \"value\": \"Casado\",\n  \"operator\": \"eq\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_content_type"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705312000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_members_analytics",
+      "parentId": "fld_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "url": "{{ _.base_url }}/members/analytics",
+      "name": "Estatísticas dos Membros",
+      "description": "Obter estatísticas detalhadas dos membros",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}",
+          "id": "pair_auth"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1705311900000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_members",
+      "parentId": "wrk_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "Members API",
+      "description": "Endpoints para gerenciamento de membros",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1705312800000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_members",
+      "parentId": null,
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "CBVN - Members Module",
+      "description": "API para gerenciamento de membros do CBVN",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_members",
+      "parentId": "wrk_members",
+      "modified": 1705312800000,
+      "created": 1705312800000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000/api",
+        "jwt_token": "seu_token_jwt_aqui"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "jwt_token"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1705312800000,
+      "_type": "environment"
+    }
+  ]
+}
